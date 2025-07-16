@@ -16,6 +16,8 @@ import {
 } from 'chart.js';
 import { Pie, Bar, Line, Doughnut } from 'react-chartjs-2';
 
+// Register ChartJS components
+ChartJS.register(
   ArcElement,
   CategoryScale,
   LinearScale,
@@ -24,10 +26,8 @@ import { Pie, Bar, Line, Doughnut } from 'react-chartjs-2';
   BarElement,
   Title,
   Tooltip,
-  Legend,
-  Filler
-);
-
+      // ...existing code...
+    if (!isAuthenticated) {
   const handleLogin = (e) => {
     e.preventDefault();
     if (loginData.username === 'admin' && loginData.password === 'admin123') {
@@ -492,7 +492,7 @@ import { Pie, Bar, Line, Doughnut } from 'react-chartjs-2';
       </div>
     </div>
   );
-}
+
 
 
 export default ExportData;
