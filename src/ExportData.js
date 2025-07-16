@@ -30,6 +30,26 @@ ChartJS.register(
   Filler
 );
 
+function ExportData() {
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loginError, setLoginError] = useState('');
+  const [chartData, setChartData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [selectedFormat, setSelectedFormat] = useState('detailed');
+  const [showAnalytics, setShowAnalytics] = useState(false);
+
+
+
+  // ...move all other logic, hooks, and functions here...
+
+  // ...move all JSX and return statements here...
+
+  return (
+    <div>ExportData Component</div>
+  );
+
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (loginData.username === 'admin' && loginData.password === 'admin123') {
@@ -231,7 +251,12 @@ ChartJS.register(
     });
   };
 
+  // Calculate key statistics
 
+
+  // ...All functions: handleLogin, formatForGoogleSheets, formatDetailed, etc...
+
+  // ...All JSX: login form, loading, main export UI...
 
   return (
     <div>ExportData Component</div>
@@ -239,56 +264,7 @@ ChartJS.register(
 
 
 
-  if (!isAuthenticated) {
-    return (
-      <div className="App">
-        <div className="login-container">
-          <h2>🔐 Admin Login Required</h2>
-          <p>Please login to access donation export data</p>
-          
-          <form onSubmit={handleLogin} className="login-form">
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                name="username"
-                value={loginData.username}
-                onChange={handleLoginChange}
-                required
-                placeholder="Enter admin username"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                name="password"
-                value={loginData.password}
-                onChange={handleLoginChange}
-                required
-                placeholder="Enter admin password"
-              />
-            </div>
-            
-            {loginError && (
-              <div className="error-message">
-                ❌ {loginError}
-              </div>
-            )}
-            
-            <button type="submit" className="login-btn">
-              Login
-            </button>
-          </form>
-          
-          <div className="login-help">
-            <p>💡 Contact administrator for access credentials</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
 
   if (loading) {
     return (
