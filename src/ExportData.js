@@ -82,26 +82,6 @@ ChartJS.register(
       'Payment Method', 'Status', 'Total Amount (₹)', 'Amount Paid (₹)', 
       'Balance (₹)', 'Date & Time', 'Receipt PDF'
     ];
-  function getStatistics() {
-    const rows = data.map(d => [
-      d.building || '',
-      d.wing || '',
-      d.flat || '',
-      d.name || '',
-      d.phone || '',
-      d.email || '',
-      d.resident_type || '',
-      d.payment_method || '',
-      d.payment_status || '',
-      d.total_amount || 0,
-      d.amount_paid || 0,
-      d.balance_amount || 0,
-      d.created_at ? new Date(d.created_at).toLocaleString() : '',
-      d.receipt_url || 'Not Generated'
-    ]);
-
-    return [headers, ...rows].map(row => row.join('\t')).join('\n');
-  };
 
   const formatSummary = (data) => {
     const summary = {
