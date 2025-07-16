@@ -70,7 +70,7 @@ function AppRouter() {
               <div className="logo-glow-ring"></div>
             </div>
             <div className="brand-text">
-              <h1>Poonam Sagarcha Raja</h1>
+              <h1>Poonam Sagar Cha Raja</h1>
               <div className="brand-subtitle">Divine Donation Portal</div>
             </div>
           </div>
