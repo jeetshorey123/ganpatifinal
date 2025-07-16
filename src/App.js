@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import ExportData from './ExportData';
 import ReceiptPDFGenerator from './ReceiptPDFGenerator';
@@ -12,9 +13,12 @@ import Sports from './sports.jpg';
 import Cultural from './cultural.jpg';
 import Video from './video.mp4'
 import Logo from './logo.jpg'
+import Footer from './Footer'; // Import the external Footer component
+import './AdminAuth.css'; // Import admin authentication styles
+import './AboutUs.css'; // Import new About Us styles
 //import Logoback from './logo192.png'
 
-function AppRouter() {
+function App() {
   const [currentPage, setCurrentPage] = useState('donation');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -45,8 +49,11 @@ function AppRouter() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Admin authentication moved to DonationForm component
+
   return (
     <div className="app-router">
+      {/* Admin Authentication Modal moved to DonationForm component */}
       <nav className="app-nav">
         <div className="nav-container">
           <div className="nav-brand">
@@ -63,7 +70,7 @@ function AppRouter() {
               <div className="logo-glow-ring"></div>
             </div>
             <div className="brand-text">
-              <h1>Poonam Sagarcha Raja</h1>
+              <h1>Poonam Sagar Cha Raja</h1>
               <div className="brand-subtitle">Divine Donation Portal</div>
             </div>
           </div>
@@ -127,6 +134,11 @@ function AppRouter() {
 }
 
 function DonationForm() {
+  const [showAdminAuth, setShowAdminAuth] = useState(false);
+  const [adminUsername, setAdminUsername] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
+  const [whatsappPendingData, setWhatsappPendingData] = useState(null);
+  
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -428,9 +440,10 @@ May Lord Ganesha bless you and your family.
           setTimeout(() => {
             const message = encodeURIComponent(generateReceiptMessage(formData));
             const donorPhone = formData.phone.replace(/[^0-9]/g, '');
-            const formattedPhone = donorPhone.startsWith('91') ? donorPhone : `91${donorPhone}`;
-            const whatsappUrl = `https://wa.me/${formattedPhone}?text=${message}`;
-            window.open(whatsappUrl, '_blank');
+            
+            // Store pending WhatsApp data and show admin authentication modal
+            setWhatsappPendingData({ donorPhone, message });
+            setShowAdminAuth(true);
           }, 1000);
         }
         
@@ -462,366 +475,400 @@ May Lord Ganesha bless you and your family.
     }
   };
 
-  return (
-    <div className="App">
-      <form onSubmit={handleSubmit} className="donation-form">
-        <h2>🕉️ Poonam Sagarcha Raja 🕉️</h2>
+  // Admin authentication function
+  const handleAdminAuth = (e) => {
+    e.preventDefault();
+    
+    // These should be stored securely in a real application
+    // For demo purposes only:
+    const validUsername = 'admin';
+    const validPassword = 'admin123';
+    
+    if (adminUsername === validUsername && adminPassword === validPassword) {
+      // Authentication successful
+      setShowAdminAuth(false);
+      
+      // Proceed with WhatsApp redirection
+      if (whatsappPendingData) {
+        const { donorPhone, message } = whatsappPendingData;
+        const formattedPhone = donorPhone.startsWith('91') ? donorPhone : `91${donorPhone}`;
+        const whatsappUrl = `https://wa.me/${formattedPhone}?text=${message}`;
+        window.open(whatsappUrl, '_blank');
         
-        <div className="form-group">
-          <label>Full Name *</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            placeholder="Enter your full name"
-          />
-        </div>
+        // Reset pending data
+        setWhatsappPendingData(null);
+      }
+    } else {
+      alert('Invalid admin credentials. Please try again.');
+    }
+    
+    // Clear credentials
+    setAdminPassword('');
+  };
 
-        <div className="form-group">
-          <label>Phone Number *</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            placeholder="Enter your phone number"
-            pattern="[0-9]{10}"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Resident Type *</label>
-          <select
-            name="residentType"
-            value={formData.residentType}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Resident Type</option>
-            <option value="Sankalp Resident">Sankalp Resident</option>
-            <option value="Outsider">Outsider</option>
-          </select>
-        </div>
-
-        {formData.residentType === 'Sankalp Resident' && (
-          <>
-            <div className="form-row">
+  return (
+    <div className="home-page">
+      {/* Admin Authentication Modal */}
+      {showAdminAuth && (
+        <div className="modal-overlay">
+          <div className="admin-auth-modal">
+            <h2>🔐 Admin Authentication</h2>
+            <p>Please enter admin credentials to send WhatsApp receipt</p>
+            
+            <form onSubmit={handleAdminAuth}>
               <div className="form-group">
-                <label>Wing *</label>
-                <select
-                  name="wing"
-                  value={formData.wing}
-                  onChange={handleChange}
+                <label>Username</label>
+                <input
+                  type="text"
+                  value={adminUsername}
+                  onChange={(e) => setAdminUsername(e.target.value)}
+                  placeholder="Admin username"
                   required
-                >
-                  <option value="">Select Wing</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                </select>
+                />
               </div>
               
               <div className="form-group">
-                <label>Flat Number *</label>
+                <label>Password</label>
                 <input
-                  type="text"
-                  name="flat"
-                  value={formData.flat}
-                  onChange={handleChange}
+                  type="password"
+                  value={adminPassword}
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="Admin password"
                   required
-                  placeholder="e.g., 101, 102"
                 />
               </div>
-            </div>
-
-            <div className="form-group">
-              <label>Building *</label>
-              <select
-                name="building"
-                value={formData.building}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Building</option>
-                <option value="Sankalp 1">Sankalp 1</option>
-                <option value="Sankalp 2">Sankalp 2</option>
-              </select>
-            </div>
-          </>
-        )}
-
-        <div className="form-group">
-          <label>Payment Method *</label>
-          <select
-            name="paymentMethod"
-            value={formData.paymentMethod}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Payment Method</option>
-            <option value="Cash">Cash</option>
-            <option value="UPI">UPI</option>
-          </select>
-        </div>
-
-        <div className="form-group receipt-preference">
-          <label htmlFor="receiptDeliveryPreference">
-            <span className="icon">📬</span> Choose Receipt Delivery Preference:
-          </label>
-          <select
-            id="receiptDeliveryPreference"
-            name="receiptDeliveryPreference"
-            value={formData.receiptDeliveryPreference}
-            onChange={handleChange}
-            className="receipt-preference-select"
-            required
-          >
-            <option value="">Select delivery method</option>
-            <option value="WhatsApp">📱 WhatsApp</option>
-            <option value="Download">⬇️ Download Now</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>Payment Status *</label>
-          <select
-            name="paymentStatus"
-            value={formData.paymentStatus}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Payment Status</option>
-            <option value="Completed">Full Payment</option>
-            <option value="Pending">Partial Payment</option>
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label>Total Amount (₹) *</label>
-          <input
-            type="number"
-            name="totalAmount"
-            value={formData.totalAmount}
-            onChange={handleChange}
-            required
-            min="1"
-            placeholder="Enter total amount"
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Amount Paid (₹) *</label>
-          <input
-            type="number"
-            name="amountPaid"
-            value={formData.amountPaid}
-            onChange={handleChange}
-            required
-            min="0"
-            max={formData.totalAmount}
-            placeholder="Enter amount paid"
-            readOnly={formData.paymentStatus === 'Completed'}
-          />
-        </div>
-
-        {formData.totalAmount && formData.amountPaid && (
-          <div className="balance-info">
-            <strong>Balance Amount: ₹{calculateBalance()}</strong>
-          </div>
-        )}
-
-        <div className="form-actions">
-          {formData.paymentMethod === 'UPI' && 
-           formData.name && formData.phone && formData.residentType &&
-           (formData.residentType === 'Outsider' || (formData.wing && formData.flat && formData.building)) &&
-           formData.totalAmount && formData.amountPaid && (
-            <button
-              type="button"
-              onClick={handleRazorpayPayment}
-              disabled={isPaymentProcessing}
-              className="razorpay-btn"
-            >
-              {isPaymentProcessing ? 'Processing...' : '💳 Pay with UPI'}
-            </button>
-          )}
-          
-          {formData.paymentMethod === 'UPI' && 
-           (!formData.name || !formData.phone || !formData.residentType ||
-            (formData.residentType === 'Sankalp Resident' && (!formData.wing || !formData.flat || !formData.building)) ||
-            !formData.totalAmount || !formData.amountPaid) && (
-            <div className="validation-message">
-              <p>⚠️ Please fill all required fields to proceed with UPI payment</p>
-            </div>
-          )}
-          
-          {formData.paymentMethod !== 'UPI' && (
-            <div className="payment-section">
-              <div className="form-group submit-container">
-                <button type="submit" className="submit-btn">
-                  {isPaymentProcessing ? '⏳ Processing...' : '� Make Payment'}
+              
+              <div className="button-group">
+                <button type="submit" className="primary-button">Login</button>
+                <button 
+                  type="button" 
+                  className="secondary-button"
+                  onClick={() => {
+                    setShowAdminAuth(false);
+                    setWhatsappPendingData(null);
+                  }}
+                >
+                  Cancel
                 </button>
-                {!formData.receiptDeliveryPreference && (
-                  <div className="validation-hint">
-                    Please select how you'd like to receive your receipt
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Hero Section */}
+      <section className="hero-section">
+        <div className="hero-content">
+          <div className="hero-text">
+            <h1 className="hero-title">Poonam Sagarcha Raja</h1>
+            <p className="hero-subtitle">Divine Donation Portal</p>
+            <p className="hero-description">
+              Support our community celebrations and contribute to the growth of our cultural heritage.
+              Every donation helps us bring more joy and prosperity to our festivities.
+            </p>
+            <div className="hero-cta">
+              <button className="cta-button" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>Donate Now</button>
+              <button className="cta-button secondary" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>
+                Learn More
+              </button>
+            </div>
+          </div>
+          <div className="hero-image">
+            <div className="image-container">
+              {/* Use existing Ganpati image */}
+              <img src={Ganpati} alt="Ganpati" className="main-image" />
+              <div className="glow-effect"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Features Section */}
+      <section className="features-section">
+        <div className="section-header">
+          <h2>Why Donate With Us?</h2>
+        </div>
+        <div className="features-grid">
+          <div className="feature-card">
+            <div className="feature-icon">🙏</div>
+            <h3>Divine Blessings</h3>
+            <p>Every contribution brings divine blessings and prosperity to you and your family.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🏮</div>
+            <h3>Cultural Preservation</h3>
+            <p>Help us preserve and celebrate our rich cultural traditions for generations to come.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">💼</div>
+            <h3>Transparent Management</h3>
+            <p>Full transparency in how your donations are utilized for community development.</p>
+          </div>
+          <div className="feature-card">
+            <div className="feature-icon">🧾</div>
+            <h3>Digital Receipts</h3>
+            <p>Receive instant digital receipts for all your generous contributions.</p>
+          </div>
+        </div>
+      </section>
+      
+      {/* Donation Form Section */}
+      <section className="donation-form-section">
+        <div className="section-header">
+          <h2 className="donation-title">Make Your Contribution</h2>
+          <p className="donation-subtitle">Support our community and be a part of our divine celebrations</p>
+        </div>
+        
+        <div className="donation-form-container">
+          <div className="donation-benefits">
+            <div className="benefit-card">
+              <div className="benefit-icon">🙏</div>
+              <h3>Divine Blessings</h3>
+              <p>Receive blessings for you and your family</p>
+            </div>
+            <div className="benefit-card">
+              <div className="benefit-icon">📱</div>
+              <h3>Instant Receipt</h3>
+              <p>Get digital receipts immediately</p>
+            </div>
+            <div className="benefit-card">
+              <div className="benefit-icon">💫</div>
+              <h3>Community Support</h3>
+              <p>Help grow our cultural activities</p>
+            </div>
+          </div>
+
+          <div className="card donation-form">
+            <form onSubmit={handleSubmit} className="form-content">
+              <div className="form-header">
+                <h2>🕉️ Poonam Sagarcha Raja 🕉️</h2>
+                <p>Fill in the details below to make your contribution</p>
+              </div>
+
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Full Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Enter your full name"
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Phone Number *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    placeholder="Enter your phone number"
+                    pattern="[0-9]{10}"
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Resident Type *</label>
+                  <select
+                    name="residentType"
+                    value={formData.residentType}
+                    onChange={handleChange}
+                    required
+                    className="form-select"
+                  >
+                    <option value="">Select Resident Type</option>
+                    <option value="Sankalp Resident">Sankalp Resident</option>
+                    <option value="Outsider">Outsider</option>
+                  </select>
+                </div>
+
+                {formData.residentType === 'Sankalp Resident' && (
+                  <div className="resident-details">
+                    <div className="form-group">
+                      <label>Wing *</label>
+                      <select
+                        name="wing"
+                        value={formData.wing}
+                        onChange={handleChange}
+                        required
+                        className="form-select"
+                      >
+                        <option value="">Select Wing</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                      </select>
+                    </div>
+                    
+                    <div className="form-group">
+                      <label>Flat Number *</label>
+                      <input
+                        type="text"
+                        name="flat"
+                        value={formData.flat}
+                        onChange={handleChange}
+                        required
+                        placeholder="e.g., 101, 102"
+                        className="form-input"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Building *</label>
+                      <select
+                        name="building"
+                        value={formData.building}
+                        onChange={handleChange}
+                        required
+                        className="form-select"
+                      >
+                        <option value="">Select Building</option>
+                        <option value="Sankalp 1">Sankalp 1</option>
+                        <option value="Sankalp 2">Sankalp 2</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                <div className="form-group payment-details">
+                  <label>Payment Method *</label>
+                  <select
+                    name="paymentMethod"
+                    value={formData.paymentMethod}
+                    onChange={handleChange}
+                    required
+                    className="form-select"
+                  >
+                    <option value="">Select Payment Method</option>
+                    <option value="Cash">Cash</option>
+                    <option value="UPI">UPI</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label className="receipt-label">
+                    <span className="icon">📬</span> Receipt Delivery Preference *
+                  </label>
+                  <select
+                    id="receiptDeliveryPreference"
+                    name="receiptDeliveryPreference"
+                    value={formData.receiptDeliveryPreference}
+                    onChange={handleChange}
+                    className="form-select"
+                    required
+                  >
+                    <option value="">Select delivery method</option>
+                    <option value="WhatsApp">📱 WhatsApp</option>
+                    <option value="Download">⬇️ Download Now</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Payment Status *</label>
+                  <select
+                    name="paymentStatus"
+                    value={formData.paymentStatus}
+                    onChange={handleChange}
+                    required
+                    className="form-select"
+                  >
+                    <option value="">Select Payment Status</option>
+                    <option value="Completed">Full Payment</option>
+                    <option value="Pending">Partial Payment</option>
+                  </select>
+                </div>
+
+                <div className="form-group amount-group">
+                  <label>Total Amount (₹) *</label>
+                  <input
+                    type="number"
+                    name="totalAmount"
+                    value={formData.totalAmount}
+                    onChange={handleChange}
+                    required
+                    min="1"
+                    placeholder="Enter total amount"
+                    className="form-input"
+                  />
+                </div>
+
+                <div className="form-group amount-group">
+                  <label>Amount Paid (₹) *</label>
+                  <input
+                    type="number"
+                    name="amountPaid"
+                    value={formData.amountPaid}
+                    onChange={handleChange}
+                    required
+                    min="0"
+                    max={formData.totalAmount}
+                    placeholder="Enter amount paid"
+                    readOnly={formData.paymentStatus === 'Completed'}
+                    className="form-input"
+                  />
+                </div>
+              </div>
+
+              {formData.totalAmount && formData.amountPaid && (
+                <div className="balance-info">
+                  <strong>Balance Amount: ₹{calculateBalance()}</strong>
+                </div>
+              )}
+
+              <div className="form-actions">
+                {formData.paymentMethod === 'UPI' && 
+                 formData.name && formData.phone && formData.residentType &&
+                 (formData.residentType === 'Outsider' || (formData.wing && formData.flat && formData.building)) &&
+                 formData.totalAmount && formData.amountPaid && (
+                  <button
+                    type="button"
+                    onClick={handleRazorpayPayment}
+                    disabled={isPaymentProcessing}
+                    className="razorpay-btn"
+                  >
+                    {isPaymentProcessing ? '⏳ Processing...' : '💳 Pay with UPI'}
+                  </button>
+                )}
+                
+                {formData.paymentMethod === 'UPI' && 
+                 (!formData.name || !formData.phone || !formData.residentType ||
+                  (formData.residentType === 'Sankalp Resident' && (!formData.wing || !formData.flat || !formData.building)) ||
+                  !formData.totalAmount || !formData.amountPaid) && (
+                  <div className="validation-message">
+                    <p>⚠️ Please fill all required fields to proceed with UPI payment</p>
+                  </div>
+                )}
+                
+                {formData.paymentMethod !== 'UPI' && (
+                  <div className="payment-section">
+                    <div className="form-group submit-container">
+                      <button type="submit" className="submit-btn">
+                        {isPaymentProcessing ? '⏳ Processing...' : '💰 Make Payment'}
+                      </button>
+                      {!formData.receiptDeliveryPreference && (
+                        <div className="validation-hint">
+                          Please select how you'd like to receive your receipt
+                        </div>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          )}
-        </div>
-      </form>
-
-      {submittedData && (
-        <div className="success-message">
-          <h3>✅ Donation Recorded Successfully!</h3>
-          <div className="receipt-details">
-            <p><strong>Name:</strong> {submittedData.name}</p>
-            <p><strong>Phone:</strong> {submittedData.phone}</p>
-            <p><strong>Resident Type:</strong> {submittedData.residentType}</p>
-            {submittedData.residentType === 'Sankalp Resident' && (
-              <p><strong>Address:</strong> {submittedData.wing}-{submittedData.flat}, {submittedData.building}</p>
-            )}
-            <p><strong>Amount Paid:</strong> ₹{submittedData.amountPaid}</p>
-            <p><strong>Payment Method:</strong> {submittedData.paymentMethod}</p>
-            <p><strong>Status:</strong> {submittedData.paymentStatus}</p>
-            <p><strong>Balance:</strong> ₹{calculateBalance()}</p>
+            </form>
           </div>
-          
-          <div className="receipt-actions">
-            <h4>Receipt Actions:</h4>
-            {submittedData.receiptDeliveryPreference === 'Download' ? (
-              <>
-                <div className="pdf-ready-notice">
-                  ✅ Your PDF Receipt has been downloaded!
-                </div>
-                <button type="button" onClick={downloadPDFReceipt} className="pdf-btn" disabled={isPdfGenerating}>
-                  ⬇️ Download Again
-                </button>
-                {pdfReceiptUrl && (
-                  <button type="button" onClick={() => window.open(pdfReceiptUrl, '_blank')} className="pdf-btn">
-                    � Open PDF in New Tab
-                  </button>
-                )}
-              </>
-            ) : submittedData.receiptDeliveryPreference === 'WhatsApp' ? (
-              <div className="whatsapp-notice">
-                ✅ Receipt will be sent via WhatsApp
-              </div>
-            ) : (
-              <>
-                <div className="email-notice">
-                  ✅ Receipt will be sent to your email
-                </div>
-                <button type="button" onClick={copyToClipboard} className="copy-btn">
-                  � Copy Receipt Text
-                </button>
-              </>
-            )}
-            
-          </div>
-          {!isAdminAuthenticated && submittedData.receiptDeliveryPreference === 'WhatsApp' && (
-            <div className="admin-login-container">
-              <h3>🔐 Admin Login Required</h3>
-              <form onSubmit={handleAdminLogin} className="admin-login-form">
-                <div className="form-group">
-                  <label>Admin Username</label>
-                  <input
-                    type="text"
-                    name="username"
-                    value={adminLoginData.username}
-                    onChange={handleAdminLoginChange}
-                    required
-                    placeholder="Enter admin username"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Admin Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={adminLoginData.password}
-                    onChange={handleAdminLoginChange}
-                    required
-                    placeholder="Enter admin password"
-                  />
-                </div>
-                {adminLoginError && <div className="error-message">❌ {adminLoginError}</div>}
-                <button type="submit" className="admin-login-btn">🔑 Login</button>
-              </form>
-            </div>
-          )}
-
-          {isAdminAuthenticated && showConfirmation && (
-            <div className="confirmation-container">
-              <h3>✅ Admin Login Successful</h3>
-              <p>Do you want to send the receipt via WhatsApp?</p>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowConfirmation(false);
-                  sendWhatsApp();
-                }}
-                className="confirm-btn"
-              >
-                📱 Yes, Send Receipt
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowConfirmation(false)}
-                className="cancel-btn"
-              >
-                ❌ No, Cancel
-              </button>
-            </div>
-          )}
-
-          {isAdminAuthenticated && submittedData.receiptDeliveryPreference === 'WhatsApp' && !showConfirmation && (
-            <button
-              type="button"
-              onClick={sendWhatsApp}
-              className="whatsapp-btn"
-            >
-              📱 Send Receipt via WhatsApp
-            </button>
-          )
-          }
         </div>
-      )}
+      </section>
+      
+      {/* Donation stats section removed as requested */}
     </div>
   );
 }
 
-function Footer() {
-  return (
-    <footer className="app-footer">
-      <div className="footer-container">
-        <div className="footer-section">
-          <h4>🕉️ Poonam Sagarcha Raja</h4>
-          <p>Supporting our community through devotion and service</p>
-        </div>
-        
-        <div className="footer-section">
-          <h4>📞 Support</h4>
-          <p>Jeet: <a href="tel:9833232395">9833232395</a></p>
-          <p>Rishi: <a href="tel:8169912193">8169912193</a></p>
-          <p>Email: <a href="mailto:poonamsagarcharaja@gmail.com">poonamsagarcharaja@gmail.com</a></p>
-        </div>
-        
-        <div className="footer-section">
-          <h4>📋 Legal</h4>
-          <p><a href="#" onClick={() => window.location.hash = 'privacy'}>Privacy Policy</a></p>
-          <p><a href="#" onClick={() => window.location.hash = 'terms'}>Terms & Conditions</a></p>
-        </div>
-      </div>
-      
-      <div className="footer-bottom">
-        <p>&copy; 2025 Poonam Sagarcha Raja. All rights reserved.</p>
-      </div>
-    </footer>
-  );
-}
+// Footer component has been moved to its own file: Footer.js
 
 function PrivacyPolicy() {
   return (
@@ -921,93 +968,128 @@ function TermsAndConditions() {
 
 function AboutUs() {
   return (
-    <div className="legal-page about-us-page">
-      <div className="legal-container about-us-container">
-        <div className="hero-section">
-          <div className="hero-content">
-            <h1>🏠 About Us – Sankalp Society</h1>
-            <div className="hero-subtitle">Where tradition meets togetherness, and every festival is celebrated with heart, devotion, and joy.</div>
-          </div>
-          <div className="hero-images">
-            <img src={Ganpati} alt="Ganpati Festival Celebration" className="hero-image main" />
-            <img src={Society} alt="Our Beautiful Society" className="hero-image secondary" />
-          </div>
+    <div className="about-us-page">
+      <section className="about-hero">
+        <div className="hero-background">
+          <img src={Ganpati} alt="Lord Ganesha" />
         </div>
-        
-        <div className="content-section">
-          <div className="intro-text">
-            <p>Welcome to <strong>Sankalp Society</strong> – a community where tradition meets togetherness, and every festival is celebrated with heart, devotion, and joy. We are a vibrant residential society that takes pride in nurturing a spirit of unity and cultural harmony through our shared celebrations, with our Ganpati festival at the very heart of it all.</p>
-          </div>
+        <div className="hero-content">
+          <h1 className="hero-title">Welcome to Sankalp Society</h1>
+          <p className="hero-subtitle">Where tradition meets togetherness, and every festival is celebrated with heart, devotion, and joy.</p>
+        </div>
+      </section>
 
-          <div className="section-block ganpati-section">
-            <div className="section-content">
-              <h2>🕉️ Our Ganesh Utsav Celebration</h2>
-              <p>At Sankalp Society, Ganesh Utsav is not just an event – it's an experience that brings every resident together in a shared expression of faith and festivity. For five unforgettable days, we welcome Lord Ganesha into our hearts and homes with grand devotion and collective enthusiasm. From the moment of Ganpati Aagman, the atmosphere transforms into one of warmth, color, music, and joy.</p>
-            </div>
-            <div className="section-images">
-              <img src={Ganpati2} alt="Ganesh Utsav Celebrations" className="section-image" />
-              <img src={Ganpati3} alt="Ganpati Festival Activities" className="section-image" />
-            </div>
-          </div>
+      <main className="content-section">
+        <div className="intro">
+          <p>Welcome to <strong>Sankalp Society</strong> – a vibrant community where cultural harmony and spiritual traditions flourish. We take immense pride in fostering unity through our shared celebrations, with the magnificent Ganpati festival being the crown jewel of our cultural calendar.</p>
+        </div>
 
-          <div className="section-block">
-            <h2>🍽️ Traditions & Rituals</h2>
-            <p>Our celebrations begin with <strong>56 Bhog</strong>, a traditional offering of 56 varieties of food to Lord Ganesha, symbolizing abundance and gratitude. Each day is marked by soulful aartis, where residents of all ages come together in devotion and prayer, strengthening our spiritual bond and community spirit.</p>
-          </div>
-
-          <div className="section-block cultural-section">
-            <div className="section-content">
-              <h2>🎭 Cultural Activities & Entertainment</h2>
-              <p>But it's not just about rituals – our Ganpati festival is a lively blend of culture, entertainment, and creativity. We host a variety of events that engage every age group, from sports tournaments and cultural performances to engaging activities like:</p>
-              <div className="activities-grid">
-                <div className="activity-item">🎲 Housie Games</div>
-                <div className="activity-item">🎨 Drawing Competitions</div>
-                <div className="activity-item">💅 Mehendi Design Contests</div>
-                <div className="activity-item">🧠 Quiz Games</div>
-                <div className="activity-item">🏆 Sports Tournaments</div>
-                <div className="activity-item">🎭 Cultural Performances</div>
+        <section>
+          <h2 className="section-title">🕉️ Our Ganesh Utsav Celebration</h2>
+          <div className="images-grid">
+            <div className="image-card">
+              <img src={Ganpati2} alt="Ganesh Utsav Celebrations" />
+              <div className="image-overlay">
+                <h3>Grand Celebrations</h3>
+                <p>Five days of devotion, culture, and community bonding</p>
               </div>
             </div>
-            <div className="section-images vertical">
-              <img src={Sports} alt="Sports Activities" className="section-image" />
-              <img src={Cultural} alt="Cultural Events" className="section-image" />
+            <div className="image-card">
+              <img src={Ganpati3} alt="Ganpati Festival Activities" />
+              <div className="image-overlay">
+                <h3>Cultural Activities</h3>
+                <p>Bringing together generations in joyous festivities</p>
+              </div>
             </div>
           </div>
+          <p>At Sankalp Society, Ganesh Utsav transcends being merely an event – it's a divine experience that unites every resident in a shared expression of faith and festivity. For five unforgettable days, we welcome Lord Ganesha into our hearts and homes with grand devotion and collective enthusiasm.</p>
+        </section>
 
-          <div className="section-block cultural-day-section">
-            <div className="section-content">
-              <h2>🎪 Cultural Day & Special Events</h2>
-              <p>Our <strong>Cultural Day</strong> is a special highlight, where residents showcase their talents in music, dance, and drama – creating memories that last long after the celebrations end. The joy continues all the way to Visarjan Day, where we bid farewell to Bappa with a grand procession, dhol beats, and heartfelt dance – celebrating his presence and seeking his blessings until he returns next year.</p>
-            </div>
-            <div className="video-section">
-              <video 
-                src={Video}
-                controls 
-                poster="/ganpati1.jpg"
-                className="celebration-video"
-                preload="metadata"
-              >
-                Your browser does not support the video tag.
-              </video>
-              <p className="video-caption">Watch our amazing festival celebrations!</p>
-            </div>
-          </div>
+        <section className="traditions">
+          <h2 className="section-title">🍽️ Sacred Traditions & Rituals</h2>
+          <p>Our celebrations commence with the revered <strong>56 Bhog</strong>, a traditional offering of 56 varieties of food to Lord Ganesha, symbolizing abundance and gratitude. Each day is marked by soulful aartis, where residents of all ages come together in devotion and prayer, strengthening our spiritual bond and community spirit.</p>
+        </section>
 
-          <div className="mission-section">
-            <h2>💫 Our Mission</h2>
-            <p>At Sankalp Society, we believe in the power of festivals to unite, uplift, and inspire. Whether it's Ganpati Utsav or any other occasion, our mission is to spread happiness, nurture bonds, and uphold our beautiful traditions with pride.</p>
-          </div>
-
-          <div className="closing-section">
-            <div className="call-to-action">
-              <h3>Join us as we celebrate not just festivals, but the spirit of togetherness.</h3>
-              <p><strong>Sankalp Society – where every celebration feels like home.</strong></p>
+        <section className="video-section">
+          <h2 className="section-title">📽️ Experience Our Celebrations</h2>
+          <div className="video-container">
+            <video 
+              src={Video}
+              controls
+              poster={Ganpati2}
+              className="feature-video"
+            >
+              Your browser does not support the video tag.
+            </video>
+            <div className="video-description">
+              <h3>Witness the Magic</h3>
+              <p>Take a glimpse into our vibrant celebrations and community spirit</p>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+
+        <section className="activities">
+          <h2 className="section-title">🏆 Sports & Cultural Activities</h2>
+          <div className="activities-grid">
+            <div className="activity-card">
+              <img src={Sports} alt="Sports Events" />
+              <div className="activity-content">
+                <h3>Sports Events</h3>
+                <ul className="activities-list">
+                  <li>🏏 Cricket Tournament</li>
+                  <li>🏸 Badminton Championship</li>
+                  <li>♟️ Chess Competition</li>
+                  <li>🎯 Indoor Games</li>
+                </ul>
+              </div>
+            </div>
+            <div className="activity-card">
+              <img src={Cultural} alt="Cultural Events" />
+              <div className="activity-content">
+                <h3>Cultural Events</h3>
+                <ul className="activities-list">
+                  <li>🎨 Art Competition</li>
+                  <li>💃 Dance Performances</li>
+                  <li>🎭 Drama Shows</li>
+                  <li>🎵 Musical Evening</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="community">
+          <h2 className="section-title">🏠 Our Beautiful Community</h2>
+          <div className="images-grid">
+            <div className="image-card">
+              <img src={Society} alt="Our Beautiful Society" />
+              <div className="image-overlay">
+                <h3>Our Home</h3>
+                <p>A place where every corner tells a story</p>
+              </div>
+            </div>
+            <div className="image-card">
+              <img src={Ganpati} alt="Festival Celebration" />
+              <div className="image-overlay">
+                <h3>Festival Spirit</h3>
+                <p>Celebrating together as one family</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="closing">
+          <h2 className="section-title">💫 Our Mission</h2>
+          <p>At Sankalp Society, we believe in the power of festivals to unite, uplift, and inspire. Whether it's Ganpati Utsav or any other occasion, our mission is to spread happiness, nurture bonds, and uphold our beautiful traditions with pride.</p>
+          
+          <div className="call-to-action">
+            <h3>Join Our Celebration of Unity</h3>
+            <p>Experience the magic of festivals where every celebration feels like home</p>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
 
-export default AppRouter;
+export default App;
