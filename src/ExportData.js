@@ -59,7 +59,7 @@ function ExportData() {
     if (donations.length > 0) {
       prepareChartData();
     }
-  }, [donations, buildingFilter, paymentStatusFilter]);
+  }, [donations, buildingFilter, paymentStatusFilter, prepareChartData]);
 
   const fetchData = async () => {
     try {

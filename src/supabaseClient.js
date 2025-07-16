@@ -211,24 +211,7 @@ export const donationService = {
   },
 
   // Update receipt URL for a donation
-  async updateReceiptUrl(donationId, receiptUrl) {
-    try {
-      const { data, error } = await supabase
-        .from('donations')
-        .update({
-          receipt_url: receiptUrl,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', donationId)
-        .select();
-
-      if (error) throw error;
-      return { success: true, data };
-    } catch (error) {
-      console.error('Error updating receipt URL:', error);
-      return { success: false, error: error.message };
-    }
-  },
+  // Removed duplicate updateReceiptUrl definition. Only keep one correct version below.
 
   // Get receipt URLs for a donation
   async getReceiptUrls(donationId) {
