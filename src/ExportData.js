@@ -79,161 +79,12 @@ ChartJS.register(
   const formatDetailed = (data) => {
     const headers = [
       'Building', 'Wing', 'Flat No', 'Donor Name', 'Phone Number', 'Email', 'Resident Type',
-      'Payment Method', 'Status', 'Total Amount (₹)', 'Amount Paid (₹)', 
-      'Balance (₹)', 'Date & Time', 'Receipt PDF'
-    ];
 
-  const formatSummary = (data) => {
-    const summary = {
-      totalDonations: data.length,
-      totalCollected: data.reduce((sum, d) => sum + (d.amount_paid || 0), 0),
-      fullPayments: data.filter(d => d.payment_status === 'Completed').length,
-      partialPayments: data.filter(d => d.payment_status === 'Pending').length,
-      pendingAmount: data.reduce((sum, d) => {
-        return sum + (d.payment_status === 'Pending' ? (d.total_amount || 0) - (d.amount_paid || 0) : 0);
-      }, 0)
-    };
+function ExportData() {
+  // ...existing code from above, including all hooks, state, and functions...
+}
 
-    const headers = ['Metric', 'Value'];
-    const rows = [
-      ['Total Donations', summary.totalDonations],
-      ['Total Collected (₹)', summary.totalCollected.toFixed(2)],
-      ['Full Payments', summary.fullPayments],
-      ['Partial Payments', summary.partialPayments],
-      ['Pending Amount (₹)', summary.pendingAmount.toFixed(2)]
-    ];
-
-    return [headers, ...rows].map(row => row.join('\t')).join('\n');
-  };
-
-  const formatBuildingWise = (data) => {
-    const buildingStats = {};
-    
-    data.forEach(d => {
-      if (!buildingStats[d.building]) {
-        buildingStats[d.building] = {
-          totalDonations: 0,
-          totalCollected: 0,
-          fullPayments: 0,
-          partialPayments: 0,
-          pendingAmount: 0
-        };
-      }
-      
-      const stats = buildingStats[d.building];
-      stats.totalDonations++;
-      stats.totalCollected += d.amount_paid || 0;
-      if (d.payment_status === 'Completed') stats.fullPayments++;
-      if (d.payment_status === 'Pending') {
-        stats.partialPayments++;
-        stats.pendingAmount += (d.total_amount || 0) - (d.amount_paid || 0);
-      }
-    });
-
-    const headers = [
-      'Building', 'Total Donations', 'Total Collected (₹)', 
-      'Full Payments', 'Partial Payments', 'Pending Amount (₹)'
-    ];
-    
-    const rows = Object.entries(buildingStats).map(([building, stats]) => [
-      building,
-      stats.totalDonations,
-      stats.totalCollected.toFixed(2),
-      stats.fullPayments,
-      stats.partialPayments,
-      stats.pendingAmount.toFixed(2)
-    ]);
-
-    return [headers, ...rows].map(row => row.join('\t')).join('\n');
-  };
-
-  const formatWingWise = (data) => {
-    const wingStats = {};
-    
-    data.forEach(d => {
-      const key = `${d.building} - ${d.wing}`;
-      if (!wingStats[key]) {
-        wingStats[key] = {
-          building: d.building,
-          wing: d.wing,
-          totalDonations: 0,
-          totalCollected: 0,
-          fullPayments: 0,
-          partialPayments: 0
-        };
-      }
-      
-      const stats = wingStats[key];
-      stats.totalDonations++;
-      stats.totalCollected += d.amount_paid || 0;
-      if (d.payment_status === 'Completed') stats.fullPayments++;
-      if (d.payment_status === 'Pending') stats.partialPayments++;
-    });
-
-    const headers = [
-      'Building', 'Wing', 'Total Donations', 'Total Collected (₹)', 
-      'Full Payments', 'Partial Payments'
-    ];
-    
-    const rows = Object.values(wingStats).map(stats => [
-      stats.building,
-      stats.wing,
-      stats.totalDonations,
-      stats.totalCollected.toFixed(2),
-      stats.fullPayments,
-      stats.partialPayments
-    ]);
-
-    return [headers, ...rows].map(row => row.join('\t')).join('\n');
-  };
-
-  const formatPartialPayments = (data) => {
-    // Filter for only partial payments
-    const partialData = data.filter(d => d.payment_status === 'Pending');
-    
-    const headers = [
-      'Building', 'Wing', 'Flat No', 'Donor Name', 'Phone Number', 'Email', 'Resident Type',
-      'Total Amount (₹)', 'Amount Paid (₹)', 'Balance Due (₹)', 
-      'Payment Method', 'Date & Time', 'Receipt PDF'
-    ];
-    
-    const rows = partialData.map(d => [
-      d.building || '',
-      d.wing || '',
-      d.flat || '',
-      d.name || '',
-      d.phone || '',
-      d.email || '',
-      d.resident_type || '',
-      d.total_amount || 0,
-      d.amount_paid || 0,
-      ((d.total_amount || 0) - (d.amount_paid || 0)).toFixed(2),
-      d.payment_method || '',
-      d.created_at ? new Date(d.created_at).toLocaleString() : '',
-      d.receipt_url || 'Not Generated'
-    ]);
-
-    // Add summary row at the end
-    const totalDue = partialData.reduce((sum, d) => sum + ((d.total_amount || 0) - (d.amount_paid || 0)), 0);
-    const totalPaid = partialData.reduce((sum, d) => sum + (d.amount_paid || 0), 0);
-    const totalAmount = partialData.reduce((sum, d) => sum + (d.total_amount || 0), 0);
-    
-    const summaryRow = [
-      'TOTAL', '', '', `${partialData.length} Donors`, '', '', '',
-      totalAmount.toFixed(2), totalPaid.toFixed(2), totalDue.toFixed(2),
-      '', '', ''
-    ];
-
-    return [headers, ...rows, summaryRow].map(row => row.join('\t')).join('\n');
-  };
-
-  const handleExport = () => {
-    const formatted = formatForGoogleSheets(donations, selectedFormat);
-    setExportData(formatted);
-  };
-
-  const copyToClipboard = async () => {
-    try {
+export default ExportData;
       await navigator.clipboard.writeText(exportData);
       alert('Data copied to clipboard! You can now paste it into Google Sheets.');
     } catch (err) {
@@ -695,6 +546,7 @@ ChartJS.register(
       <div className="export-controls">
         <div className="control-group">
           <label>Export Format:</label>
+
           <select 
             value={selectedFormat} 
             onChange={(e) => setSelectedFormat(e.target.value)}
@@ -702,164 +554,13 @@ ChartJS.register(
             <option value="detailed">Detailed Donor Information</option>
             <option value="partial-payments">Partial Payments Report</option>
             <option value="summary">Summary Statistics</option>
-            <option value="building-wise">Building-wise Summary</option>
-            <option value="wing-wise">Wing-wise Summary</option>
           </select>
-        </div>
 
-        <div className="control-group">
-          <label>Building Filter:</label>
-          <select 
-            value={buildingFilter} 
-            onChange={(e) => setBuildingFilter(e.target.value)}
-          >
-            <option value="all">All Buildings</option>
-            {buildings.map(building => (
-              <option key={building} value={building}>{building}</option>
-            ))}
-          </select>
         </div>
-
-        <div className="control-group">
-          <label>Payment Status Filter:</label>
-          <select 
-            value={paymentStatusFilter} 
-            onChange={(e) => setPaymentStatusFilter(e.target.value)}
-          >
-            <option value="all">All Payments</option>
-            <option value="partial">Partial Payments Only</option>
-            <option value="completed">Completed Payments Only</option>
-          </select>
-          {paymentStatusFilter === 'partial' && (
-            <small className="filter-help">
-              💡 Showing donors who have pending balance amounts
-            </small>
-          )}
-        </div>
-
-        <button onClick={handleExport} className="export-btn">
-          📋 Generate Export Data
-        </button>
       </div>
-
-      {exportData && (
-        <div className="export-result">
-          <h3>📄 Export Data Ready</h3>
-          <p>Total Records: {getFilteredCount()}</p>
-          {paymentStatusFilter === 'partial' && (
-            <p className="partial-summary">
-              💰 Showing {getFilteredCount()} donors with pending balance amounts
-            </p>
-          )}
-          
-          <div className="export-actions">
-            <button onClick={copyToClipboard} className="copy-btn">
-              📋 Copy to Clipboard
-            </button>
-            <button onClick={downloadCSV} className="download-btn">
-              💾 Download CSV
-            </button>
-          </div>
-
-          <div className="export-preview">
-            <h4>Preview (First 5 rows):</h4>
-            <pre>{exportData.split('\n').slice(0, 6).join('\n')}</pre>
-          </div>
-
-          <div className="export-instructions">
-            <h4>📝 How to use in Google Sheets:</h4>
-            <ol>
-              <li>Click "Copy to Clipboard" button above</li>
-              <li>Open Google Sheets in your browser</li>
-              <li>Create a new spreadsheet</li>
-              <li>Click on cell A1</li>
-              <li>Press Ctrl+V (or Cmd+V on Mac) to paste</li>
-              <li>The data will automatically format into columns</li>
-            </ol>
-          </div>
-        </div>
-      )}
-
-      {showAnalytics && donations.length > 0 && (
-        <div className="analytics-section">
-          <h3>📈 Donation Analytics</h3>
-          
-          <div className="chart-container">
-            <div className="chart-card">
-              <h4>Payment Status Distribution</h4>
-              <Pie data={chartData.paymentStatus} />
-            </div>
-
-            <div className="chart-card">
-              <h4>Building-wise Donation Distribution</h4>
-              <Bar data={chartData.buildingDistribution} />
-            </div>
-
-            <div className="chart-card">
-              <h4>Donations Over Time</h4>
-              <Line data={chartData.timelineData} />
-            </div>
-
-            <div className="chart-card">
-              <h4>Amount Distribution</h4>
-              <Doughnut data={chartData.amountDistribution} />
-            </div>
-          </div>
-
-          <button onClick={() => setShowAnalytics(false)} className="hide-analytics-btn">
-            📉 Hide Analytics
-          </button>
-        </div>
-      )}
-
-      {donations.length > 0 && (
-        <div className="statistics-summary">
-          <h3>📊 Key Statistics</h3>
-          <div className="statistics-grid">
-            <div className="statistic-card">
-              <h4>Total Donations</h4>
-              <p className="statistic-value">{statistics.totalDonations}</p>
-            </div>
-
-            <div className="statistic-card">
-              <h4>Total Amount (₹)</h4>
-              <p className="statistic-value">{statistics.totalAmount.toFixed(2)}</p>
-            </div>
-
-            <div className="statistic-card">
-              <h4>Total Paid (₹)</h4>
-              <p className="statistic-value">{statistics.totalPaid.toFixed(2)}</p>
-            </div>
-
-            <div className="statistic-card">
-              <h4>Total Pending (₹)</h4>
-              <p className="statistic-value">{statistics.totalPending.toFixed(2)}</p>
-            </div>
-
-            <div className="statistic-card">
-              <h4>Completed Payments</h4>
-              <p className="statistic-value">{statistics.completedPayments}</p>
-            </div>
-
-            <div className="statistic-card">
-              <h4>Partial Payments</h4>
-              <p className="statistic-value">{statistics.partialPayments}</p>
-            </div>
-
-            <div className="statistic-card">
-              <h4>Completion Rate</h4>
-              <p className="statistic-value">{statistics.completionRate}%</p>
-            </div>
-
-            <div className="statistic-card">
-              <h4>Average Donation (₹)</h4>
-              <p className="statistic-value">{statistics.averageDonation}</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
+
 
 export default ExportData;
