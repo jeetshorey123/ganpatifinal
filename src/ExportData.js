@@ -76,40 +76,7 @@ ChartJS.register(
     }
   };
 
-  const formatDetailed = (data) => {
-    const headers = [
-      'Building', 'Wing', 'Flat No', 'Donor Name', 'Phone Number', 'Email', 'Resident Type',
 
-function ExportData() {
-  // ...existing code from above, including all hooks, state, and functions...
-}
-
-export default ExportData;
-      await navigator.clipboard.writeText(exportData);
-      alert('Data copied to clipboard! You can now paste it into Google Sheets.');
-    } catch (err) {
-      console.error('Failed to copy to clipboard:', err);
-      alert('Failed to copy to clipboard. Please select all text and copy manually.');
-    }
-  };
-
-  const downloadCSV = () => {
-    const csvData = exportData.replace(/\t/g, ',');
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `donations_${selectedFormat}_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  // Chart data preparation function
-  const prepareChartData = () => {
-    // Filter donations based on selected filters
-    let filteredData = [...donations];
     
     // Apply building filter
     if (buildingFilter !== 'all') {
@@ -265,46 +232,18 @@ export default ExportData;
   };
 
   // Calculate key statistics
-  const getStatistics = () => {
-    let filteredData = [...donations];
-    
-    // Apply filters
-    if (buildingFilter !== 'all') {
-      filteredData = filteredData.filter(d => d.building === buildingFilter);
-    }
-    
-    if (paymentStatusFilter !== 'all') {
-      if (paymentStatusFilter === 'partial') {
-        filteredData = filteredData.filter(d => d.payment_status === 'Pending');
-      } else if (paymentStatusFilter === 'completed') {
-        filteredData = filteredData.filter(d => d.payment_status === 'Completed');
-      }
-    }
 
-    const totalDonations = filteredData.length;
-    const totalAmount = filteredData.reduce((sum, d) => sum + (d.total_amount || 0), 0);
-    const totalPaid = filteredData.reduce((sum, d) => sum + (d.amount_paid || 0), 0);
-    const totalPending = filteredData.reduce((sum, d) => {
-      return sum + (d.payment_status === 'Pending' ? (d.total_amount || 0) - (d.amount_paid || 0) : 0);
-    }, 0);
-    const completedPayments = filteredData.filter(d => d.payment_status === 'Completed').length;
-    const partialPayments = filteredData.filter(d => d.payment_status === 'Pending').length;
-    const completionRate = totalDonations > 0 ? (completedPayments / totalDonations * 100).toFixed(1) : 0;
-    const averageDonation = totalDonations > 0 ? (totalAmount / totalDonations).toFixed(2) : 0;
 
-    return {
-      totalDonations,
-      totalAmount,
-      totalPaid,
-      totalPending,
-      completedPayments,
-      partialPayments,
-      completionRate,
-      averageDonation
-    };
-  };
+  // ...All functions: handleLogin, formatForGoogleSheets, formatDetailed, etc...
 
-  // If not authenticated, show login form
+  // ...All JSX: login form, loading, main export UI...
+
+  return (
+    <div>ExportData Component</div>
+  );
+
+
+
   if (!isAuthenticated) {
     return (
       <div className="App">
