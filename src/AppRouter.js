@@ -5,18 +5,26 @@ import ExportData from './ExportData';
 import ReceiptPDFGenerator from './ReceiptPDFGenerator';
 import AdminTransactions from './AdminTransactions';
 import { donationService } from './supabaseClient';
-import Ganpati from './ganpati1.jpg'
+import Ganpati from './ganpati1.jpg';
 import Society from './society.jpg';
-import Ganpati2 from './ganpati2.jpg'
-import Ganpati3 from './ganpati3.jpg'
+import Ganpati2 from './ganpati2.jpg';
+import Ganpati3 from './ganpati3.jpg';
 import Sports from './sports.jpg';
 import Cultural from './cultural.jpg';
-import Video from './video.mp4'
-import Logo from './logo.jpg'
-import Footer from './Footer'; // Import the external Footer component
-import './AdminAuth.css'; // Import admin authentication styles
-import './AboutUs.css'; // Import new About Us styles
+import Video from './video.mp4';
+import Logo from './logo.jpg';
+import Footer from './Footer';
+import './AdminAuth.css';
+import './AboutUs.css';
 //import Logoback from './logo192.png'
+
+// Ensure all components are defined or imported for Vercel deployment
+import ReactExportData from './ExportData';
+// If AboutUs, PrivacyPolicy, TermsAndConditions, DonationForm are in separate files, import them here
+// import AboutUs from './AboutUs';
+// import PrivacyPolicy from './PrivacyPolicy';
+// import TermsAndConditions from './TermsAndConditions';
+// import DonationForm from './DonationForm';
 
 function AppRouter() {
   const [currentPage, setCurrentPage] = useState('donation');
