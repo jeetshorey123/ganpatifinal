@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Dashboard - Mobile View</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .section {
+            margin: 20px 0;
+        }
+        
+        .section h2 {
+            color: #667eea;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .refresh-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        
+        .building-filter {
+            margin: 15px 0;
+        }
+        
+        .building-filter select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            table {
+                font-size: 10px;
+            }
+            
+            th, td {
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🕉️ Donation Dashboard</h1>
+        
+        <button class="refresh-btn" onclick="loadData()">🔄 Refresh Data</button>
+        
+        <div class="building-filter">
+            <select id="buildingFilter" onchange="filterByBuilding()">
+                <option value="">All Buildings</option>
+                <option value="Sankalp 1">Sankalp 1</option>
+                <option value="Sankalp 2">Sankalp 2</option>
+            </select>
+        </div>
+        
+        <div id="stats" class="stats-grid">
+            <!-- Stats will be loaded here -->
+        </div>
+        
+        <div class="section">
+            <h2>📊 Building Summary</h2>
+            <div class="table-container">
+                <table id="buildingSummary">
+                    <thead>
+                        <tr>
+                            <th>Building</th>
+                            <th>Total</th>
+                            <th>Collected</th>
+                            <th>Full Payments</th>
+                            <th>Partial Payments</th>
+                        </tr>
+                    </thead>
+                    <tbody id="buildingSummaryBody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>👥 Recent Donations</h2>
+            <div class="table-container">
+                <table id="recentDonations">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Building</th>
+                            <th>Wing</th>
+                            <th>Flat</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentDonationsBody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🏢 All Donations</h2>
+            <div class="table-container">
+                <table id="allDonations">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Method</th>
+                            <th>Total</th>
+                            <th>Paid</th>
+                            <th>Balance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allDonationsBody">
+                        <!-- Data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Supabase
+        const supabaseUrl = 'https://pngzkvczhcuwwowztvcb.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBuZ3prdmN6aGN1d3dvd3p0dmNiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzMzY5NzksImV4cCI6MjA2NzkxMjk3OX0.j0eHLlyXuySaZG41QH0pXA-iW1vT0HD-eiE99dwiF8w';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+        
+        let allDonationsData = [];
+        
+        async function loadData() {
+            try {
+                document.getElementById('stats').innerHTML = '<div class="loading">Loading data...</div>';
+                
+                // Fetch all donations
+                const { data: donations, error } = await supabase
+                    .from('donations')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Error:', error);
+                    alert('Error loading data: ' + error.message);
+                    return;
+                }
+                
+                allDonationsData = donations;
+                displayStats(donations);
+                displayBuildingSummary(donations);
+                displayRecentDonations(donations.slice(0, 10));
+                displayAllDonations(donations);
+                
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Error loading data: ' + err.message);
+            }
+        }
+        
+        function displayStats(donations) {
+            const totalDonations = donations.length;
+            const totalCollected = donations.reduce((sum, d) => sum + parseFloat(d.amount_paid || 0), 0);
+            const completedDonations = donations.filter(d => d.payment_status === 'Completed').length;
+            const pendingAmount = donations.reduce((sum, d) => {
+                if (d.payment_status === 'Pending') {
+                    return sum + (parseFloat(d.total_amount || 0) - parseFloat(d.amount_paid || 0));
+                }
+                return sum;
+            }, 0);
+            
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card">
+                    <span class="stat-number">${totalDonations}</span>
+                    <span class="stat-label">Total Donations</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">₹${totalCollected.toFixed(0)}</span>
+                    <span class="stat-label">Collected</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${completedDonations}</span>
+                    <span class="stat-label">Full Payments</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">₹${pendingAmount.toFixed(0)}</span>
+                    <span class="stat-label">Partial Payments</span>
+                </div>
+            `;
+        }
+        
+        function displayBuildingSummary(donations) {
+            const buildings = {};
+            
+            donations.forEach(d => {
+                if (!buildings[d.building]) {
+                    buildings[d.building] = {
+                        total: 0,
+                        collected: 0,
+                        completed: 0,
+                        pending: 0
+                    };
+                }
+                
+                buildings[d.building].total++;
+                buildings[d.building].collected += parseFloat(d.amount_paid || 0);
+                if (d.payment_status === 'Completed') {
+                    buildings[d.building].completed++;
+                } else {
+                    buildings[d.building].pending++;
+                }
+            });
+            
+            let html = '';
+            Object.keys(buildings).forEach(building => {
+                const stats = buildings[building];
+                html += `
+                    <tr>
+                        <td>${building}</td>
+                        <td>${stats.total}</td>
+                        <td>₹${stats.collected.toFixed(0)}</td>
+                        <td>${stats.completed}</td>
+                        <td>${stats.pending}</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('buildingSummaryBody').innerHTML = html;
+        }
+        
+        function displayRecentDonations(donations) {
+            let html = '';
+            donations.forEach(d => {
+                const date = new Date(d.created_at).toLocaleDateString('en-IN');
+                html += `
+                    <tr>
+                        <td>${d.name}</td>
+                        <td>${d.building}</td>
+                        <td>${d.wing}</td>
+                        <td>${d.flat}</td>
+                        <td>₹${parseFloat(d.amount_paid || 0).toFixed(0)}</td>
+                        <td>${d.payment_status}</td>
+                        <td>${date}</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('recentDonationsBody').innerHTML = html;
+        }
+        
+        function displayAllDonations(donations) {
+            let html = '';
+            donations.forEach(d => {
+                const balance = parseFloat(d.total_amount || 0) - parseFloat(d.amount_paid || 0);
+                html += `
+                    <tr>
+                        <td>${d.name}</td>
+                        <td>${d.phone}</td>
+                        <td>${d.building} ${d.wing}-${d.flat}</td>
+                        <td>${d.payment_method}</td>
+                        <td>₹${parseFloat(d.total_amount || 0).toFixed(0)}</td>
+                        <td>₹${parseFloat(d.amount_paid || 0).toFixed(0)}</td>
+                        <td>₹${balance.toFixed(0)}</td>
+                        <td>${d.payment_status}</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('allDonationsBody').innerHTML = html;
+        }
+        
+        function filterByBuilding() {
+            const selectedBuilding = document.getElementById('buildingFilter').value;
+            let filteredData = allDonationsData;
+            
+            if (selectedBuilding) {
+                filteredData = allDonationsData.filter(d => d.building === selectedBuilding);
+            }
+            
+            displayStats(filteredData);
+            displayBuildingSummary(filteredData);
+            displayRecentDonations(filteredData.slice(0, 10));
+            displayAllDonations(filteredData);
+        }
+        
+        // Load data when page loads
+        window.onload = loadData;
+    </script>
+</body>
+</html>
