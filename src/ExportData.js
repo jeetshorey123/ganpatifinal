@@ -41,40 +41,6 @@ ChartJS.register(
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setLoginData({ username: '', password: '' });
-    setLoginError('');
-  };
-
-  const handleLoginChange = (e) => {
-    const { name, value } = e.target;
-    setLoginData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const getFilteredCount = () => {
-    let filteredData = donations;
-    
-    // Apply building filter
-    if (buildingFilter !== 'all') {
-      filteredData = filteredData.filter(d => d.building === buildingFilter);
-    }
-    
-    // Apply payment status filter
-    if (paymentStatusFilter !== 'all') {
-      if (paymentStatusFilter === 'partial') {
-        filteredData = filteredData.filter(d => d.payment_status === 'Pending');
-      } else if (paymentStatusFilter === 'completed') {
-        filteredData = filteredData.filter(d => d.payment_status === 'Completed');
-      }
-    }
-    
-    return filteredData.length;
-  };
-
   const formatForGoogleSheets = (data, format) => {
     if (!data || data.length === 0) return '';
 
