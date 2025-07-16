@@ -211,24 +211,7 @@ export const donationService = {
   },
 
   // Update receipt URL for a donation
-  async updateReceiptUrl(donationId, receiptUrl) {
-    try {
-      const { data, error } = await supabase
-        .from('donations')
-        .update({
-          receipt_url: receiptUrl,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', donationId)
-        .select();
-
-      if (error) throw error;
-      return { success: true, data };
-    } catch (error) {
-      console.error('Error updating receipt URL:', error);
-      return { success: false, error: error.message };
-    }
-  },
+  // Removed duplicate updateReceiptUrl definition. Only keep one correct version below.
 
   // Get receipt URLs for a donation
   async getReceiptUrls(donationId) {
@@ -418,16 +401,16 @@ export const donationService = {
     try {
       console.log('Uploading PDF receipt:', fileName);
       
-      const { data, error } = await supabase.storage
+      const uploadResult = await supabase.storage
         .from('receipts')
         .upload(fileName, pdfBlob, {
           contentType: 'application/pdf',
           upsert: true,
         });
 
-      if (error) {
-        console.error("Upload failed:", error);
-        return { success: false, error };
+      if (uploadResult.error) {
+        console.error("Upload failed:", uploadResult.error);
+        return { success: false, error: uploadResult.error };
       }
 
       const { data: urlData } = supabase.storage
