@@ -30,55 +30,6 @@ ChartJS.register(
   Filler
 );
 
-function ExportData() {
-  const [donations, setDonations] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedFormat, setSelectedFormat] = useState('detailed');
-  const [exportData, setExportData] = useState('');
-  const [buildingFilter, setBuildingFilter] = useState('all');
-  const [paymentStatusFilter, setPaymentStatusFilter] = useState('all');
-  const [buildings, setBuildings] = useState([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loginData, setLoginData] = useState({ username: '', password: '' });
-  const [loginError, setLoginError] = useState('');
-  // New chart data state
-  const [chartData, setChartData] = useState({
-    paymentStatus: null,
-    buildingDistribution: null,
-    timelineData: null,
-    amountDistribution: null
-  });
-  // Show/hide analytics section
-  const [showAnalytics, setShowAnalytics] = useState(true);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (donations.length > 0) {
-      prepareChartData();
-    }
-  }, [donations, buildingFilter, paymentStatusFilter, prepareChartData]);
-
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      const result = await donationService.getAllDonations();
-      if (result.success) {
-        setDonations(result.data);
-        
-        // Extract unique buildings
-        const uniqueBuildings = [...new Set(result.data.map(d => d.building))];
-        setBuildings(uniqueBuildings);
-      }
-    } catch (error) {
-      console.error('Error fetching donations:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleLogin = (e) => {
     e.preventDefault();
     if (loginData.username === 'admin' && loginData.password === 'admin123') {

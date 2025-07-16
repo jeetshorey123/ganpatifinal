@@ -401,16 +401,16 @@ export const donationService = {
     try {
       console.log('Uploading PDF receipt:', fileName);
       
-      const { data, error } = await supabase.storage
+      const uploadResult = await supabase.storage
         .from('receipts')
         .upload(fileName, pdfBlob, {
           contentType: 'application/pdf',
           upsert: true,
         });
 
-      if (error) {
-        console.error("Upload failed:", error);
-        return { success: false, error };
+      if (uploadResult.error) {
+        console.error("Upload failed:", uploadResult.error);
+        return { success: false, error: uploadResult.error };
       }
 
       const { data: urlData } = supabase.storage
