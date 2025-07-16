@@ -26,8 +26,10 @@ ChartJS.register(
   BarElement,
   Title,
   Tooltip,
-      // ...existing code...
-    if (!isAuthenticated) {
+  Legend,
+  Filler
+);
+
   const handleLogin = (e) => {
     e.preventDefault();
     if (loginData.username === 'admin' && loginData.password === 'admin123') {
