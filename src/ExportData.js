@@ -116,7 +116,7 @@ ChartJS.register(
       'Payment Method', 'Status', 'Total Amount (₹)', 'Amount Paid (₹)', 
       'Balance (₹)', 'Date & Time', 'Receipt PDF'
     ];
-    
+  function getStatistics() {
     const rows = data.map(d => [
       d.building || '',
       d.wing || '',
