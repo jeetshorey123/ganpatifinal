@@ -16,8 +16,6 @@ import {
 } from 'chart.js';
 import { Pie, Bar, Line, Doughnut } from 'react-chartjs-2';
 
-// Register ChartJS components
-ChartJS.register(
   ArcElement,
   CategoryScale,
   LinearScale,
@@ -231,12 +229,7 @@ ChartJS.register(
     });
   };
 
-  // Calculate key statistics
 
-
-  // ...All functions: handleLogin, formatForGoogleSheets, formatDetailed, etc...
-
-  // ...All JSX: login form, loading, main export UI...
 
   return (
     <div>ExportData Component</div>
