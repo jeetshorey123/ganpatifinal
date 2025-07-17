@@ -22,8 +22,20 @@ function Footer() {
 
         <div className="legal-info">
           <h4>📋 Legal</h4>
-          <p>Privacy Policy</p>
-          <p>Terms & Conditions</p>
+          <button
+            className="legal-link"
+            onClick={() => window.dispatchEvent(new CustomEvent('navigateToPage', { detail: 'privacy' }))}
+            style={{ background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline', cursor: 'pointer', padding: 0, font: 'inherit' }}
+          >
+            Privacy Policy
+          </button>
+          <button
+            className="legal-link"
+            onClick={() => window.dispatchEvent(new CustomEvent('navigateToPage', { detail: 'terms' }))}
+            style={{ background: 'none', border: 'none', color: 'inherit', textDecoration: 'underline', cursor: 'pointer', padding: 0, font: 'inherit' }}
+          >
+            Terms & Conditions
+          </button>
           <p>© 2025 Poonam Sagarcha Raja. All rights reserved.</p>
         </div>
       </div>
