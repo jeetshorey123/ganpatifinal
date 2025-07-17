@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/:path*", "destination": "/:path*" }
+    { "source": "/ganpati/:path*", "destination": "/:path*" }
   ]
 }
