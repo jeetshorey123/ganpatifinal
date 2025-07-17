@@ -90,45 +90,47 @@ function AppRouter() {
             <span></span>
           </div>
           
-          {/* Navigation Links */}
-          <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-            <button 
-              className={currentPage === 'donation' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('donation')}
-            >
-              <span>💰 Donation Form</span>
-            </button>
-            <button 
-              className={currentPage === 'about' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('about')}
-            >
-              <span>🏠 About Us</span>
-            </button>
-            <button 
-              className={currentPage === 'export' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('export')}
-            >
-              <span>📊 Export Data</span>
-            </button>
-            <button 
-              className={currentPage === 'admin' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('admin')}
-            >
-              <span>🛡️ Admin</span>
-            </button>
-            <button 
-              className={currentPage === 'privacy' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('privacy')}
-            >
-              <span>🔒 Privacy Policy</span>
-            </button>
-            <button 
-              className={currentPage === 'terms' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('terms')}
-            >
-              <span>📋 Terms & Conditions</span>
-            </button>
-          </div>
+          {/* Navigation Links - only show when menu is open */}
+          {isMenuOpen && (
+            <div className="nav-links active">
+              <button 
+                className={currentPage === 'donation' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('donation')}
+              >
+                <span>💰 Donation Form</span>
+              </button>
+              <button 
+                className={currentPage === 'about' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('about')}
+              >
+                <span>🏠 About Us</span>
+              </button>
+              <button 
+                className={currentPage === 'export' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('export')}
+              >
+                <span>📊 Export Data</span>
+              </button>
+              <button 
+                className={currentPage === 'admin' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('admin')}
+              >
+                <span>🛡️ Admin</span>
+              </button>
+              <button 
+                className={currentPage === 'privacy' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('privacy')}
+              >
+                <span>🔒 Privacy Policy</span>
+              </button>
+              <button 
+                className={currentPage === 'terms' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('terms')}
+              >
+                <span>📋 Terms & Conditions</span>
+              </button>
+            </div>
+          )}
         </div>
       </nav>
       
@@ -456,6 +458,9 @@ May Lord Ganesha bless you and your family.
         }
         
         alert('Donation recorded successfully! Receipt is being sent to admin and PDF is being generated...');
+        setTimeout(() => {
+          alert('🙏 Thank you for your generous donation! May Lord Ganesha bless you and your family.');
+        }, 500);
       } else {
         console.error('Error saving donation:', result.error);
         alert(`Failed to save donation to database: ${result.error}\n\nPlease contact admin if this persists.`);
@@ -567,8 +572,10 @@ May Lord Ganesha bless you and your family.
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
-            <h1 className="hero-title">Poonam Sagarcha Raja</h1>
+            <h1 className="hero-title">Poonam Sagar Cha Raja</h1>
             <p className="hero-subtitle">Divine Donation Portal</p>
+            <p className="hero-subtitle">मन्नत के गणपति</p>
+            <p className="hero-subtitle">नवसाचा गणपती</p>
             <p className="hero-description">
               Support our community celebrations and contribute to the growth of our cultural heritage.
               Every donation helps us bring more joy and prosperity to our festivities.
@@ -583,7 +590,7 @@ May Lord Ganesha bless you and your family.
           <div className="hero-image">
             <div className="image-container">
               {/* Use existing Ganpati image */}
-              <img src={Ganpati} alt="Ganpati" className="main-image" />
+              <img src={Ganpati2} alt="Ganpati" className="main-image" />
               <div className="glow-effect"></div>
             </div>
           </div>
@@ -629,32 +636,36 @@ May Lord Ganesha bless you and your family.
         <div className="donation-form-container">
           <div className="donation-benefits">
             <div className="benefit-card">
-              <div className="benefit-icon">🙏</div>
-              <h3>Divine Blessings</h3>
-              <p>Receive blessings for you and your family</p>
+              <div className="benefit-icon"></div>
+              <h3></h3>
+              <p></p>
             </div>
             <div className="benefit-card">
-              <div className="benefit-icon">📱</div>
-              <h3>Instant Receipt</h3>
-              <p>Get digital receipts immediately</p>
+              <div className="benefit-icon"></div>
+              <h3></h3>
+              <p></p>
             </div>
             <div className="benefit-card">
-              <div className="benefit-icon">💫</div>
-              <h3>Community Support</h3>
-              <p>Help grow our cultural activities</p>
+              <div className="benefit-icon"></div>
+              <h3></h3>
+              <p></p>
             </div>
           </div>
 
           <div className="card donation-form">
             <form onSubmit={handleSubmit} className="form-content">
               <div className="form-header">
-                <h2>🕉️ Poonam Sagarcha Raja 🕉️</h2>
+                <h1>Poonam Sagarcha Raja</h1>
                 <p>Fill in the details below to make your contribution</p>
+                <p> </p>
+                <p> </p>
+                <p> </p>
+
               </div>
 
               <div className="form-grid">
                 <div className="form-group">
-                  <label>Full Name *</label>
+                  <label>Full Name</label>
                   <input
                     type="text"
                     name="name"
@@ -667,7 +678,7 @@ May Lord Ganesha bless you and your family.
                 </div>
 
                 <div className="form-group">
-                  <label>Phone Number *</label>
+                  <label>Phone Number </label>
                   <input
                     type="tel"
                     name="phone"
@@ -681,7 +692,7 @@ May Lord Ganesha bless you and your family.
                 </div>
 
                 <div className="form-group">
-                  <label>Resident Type *</label>
+                  <label>Resident Type </label>
                   <select
                     name="residentType"
                     value={formData.residentType}
@@ -698,7 +709,7 @@ May Lord Ganesha bless you and your family.
                 {formData.residentType === 'Sankalp Resident' && (
                   <div className="resident-details">
                     <div className="form-group">
-                      <label>Wing *</label>
+                      <label>Wing</label>
                       <select
                         name="wing"
                         value={formData.wing}
@@ -713,7 +724,7 @@ May Lord Ganesha bless you and your family.
                     </div>
                     
                     <div className="form-group">
-                      <label>Flat Number *</label>
+                      <label>Flat Number </label>
                       <input
                         type="text"
                         name="flat"
@@ -726,7 +737,7 @@ May Lord Ganesha bless you and your family.
                     </div>
 
                     <div className="form-group">
-                      <label>Building *</label>
+                      <label>Building </label>
                       <select
                         name="building"
                         value={formData.building}
@@ -743,7 +754,7 @@ May Lord Ganesha bless you and your family.
                 )}
 
                 <div className="form-group payment-details">
-                  <label>Payment Method *</label>
+                  <label>Payment Method </label>
                   <select
                     name="paymentMethod"
                     value={formData.paymentMethod}
@@ -759,7 +770,7 @@ May Lord Ganesha bless you and your family.
 
                 <div className="form-group">
                   <label className="receipt-label">
-                    <span className="icon">📬</span> Receipt Delivery Preference *
+                    <span className="icon">📬</span> Receipt Delivery Preference
                   </label>
                   <select
                     id="receiptDeliveryPreference"
@@ -776,7 +787,7 @@ May Lord Ganesha bless you and your family.
                 </div>
 
                 <div className="form-group">
-                  <label>Payment Status *</label>
+                  <label>Payment Status </label>
                   <select
                     name="paymentStatus"
                     value={formData.paymentStatus}
@@ -791,7 +802,7 @@ May Lord Ganesha bless you and your family.
                 </div>
 
                 <div className="form-group amount-group">
-                  <label>Total Amount (₹) *</label>
+                  <label>Total Amount (₹)</label>
                   <input
                     type="number"
                     name="totalAmount"
@@ -801,11 +812,12 @@ May Lord Ganesha bless you and your family.
                     min="1"
                     placeholder="Enter total amount"
                     className="form-input"
+                    onWheel={e => e.target.blur()}
                   />
                 </div>
 
                 <div className="form-group amount-group">
-                  <label>Amount Paid (₹) *</label>
+                  <label>Amount Paid (₹) </label>
                   <input
                     type="number"
                     name="amountPaid"
@@ -817,6 +829,7 @@ May Lord Ganesha bless you and your family.
                     placeholder="Enter amount paid"
                     readOnly={formData.paymentStatus === 'Completed'}
                     className="form-input"
+                    onWheel={e => e.target.blur()}
                   />
                 </div>
               </div>
@@ -859,7 +872,7 @@ May Lord Ganesha bless you and your family.
                       </button>
                       {!formData.receiptDeliveryPreference && (
                         <div className="validation-hint">
-                          Please select how you'd like to receive your receipt
+                          
                         </div>
                       )}
                     </div>

@@ -4,6 +4,9 @@ import './AdminTransactions.css';
 import ReceiptPDFGenerator from './ReceiptPDFGenerator';
 
 function AdminTransactions() {
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(10); // Show 10 transactions per page
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -34,7 +37,7 @@ function AdminTransactions() {
   const fetchRecentTransactions = async () => {
     try {
       setLoading(true);
-      const result = await donationService.getRecentTransactions(20);
+      const result = await donationService.getRecentTransactions(200); // Fetch more for pagination
       if (result.success) {
         setTransactions(result.data);
         // Calculate stats
@@ -63,11 +66,12 @@ function AdminTransactions() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (loginData.username === 'admin' && loginData.password === 'admin123') {
+    const validUsers = ['jeet', 'rishi'];
+    if (validUsers.includes(loginData.username) && loginData.password === 'sankalp69') {
       setIsAuthenticated(true);
       setLoginError('');
     } else {
-      setLoginError('Invalid admin credentials');
+      setLoginError('Invalid username or password');
     }
   };
 
@@ -76,6 +80,7 @@ function AdminTransactions() {
     setLoginData({ username: '', password: '' });
     setLoginError('');
     setTransactions([]);
+    setCurrentPage(1);
   };
 
   const handleLoginChange = (e) => {
@@ -217,11 +222,23 @@ function AdminTransactions() {
           transaction.payment_status === 'Pending' : 
           transaction.payment_status === filters.paymentStatus);
 
-      const matchesReceiptPreference = filters.receiptPreference === 'all' || 
-        transaction.receipt_delivery_preference === filters.receiptPreference;
+      // Custom logic for receipt preference
+      let matchesReceiptPreference = true;
+      if (filters.receiptPreference === 'whatsapp') {
+        matchesReceiptPreference = (transaction.receipt_delivery_preference && transaction.receipt_delivery_preference.toLowerCase() === 'whatsapp');
+      } else if (filters.receiptPreference === 'download') {
+        matchesReceiptPreference = (transaction.receipt_delivery_preference && (transaction.receipt_delivery_preference.toLowerCase() === 'download' || transaction.receipt_delivery_preference.toLowerCase() === 'download now'));
+      } else if (filters.receiptPreference !== 'all') {
+        matchesReceiptPreference = transaction.receipt_delivery_preference === filters.receiptPreference;
+      }
 
-      const matchesPaymentType = filters.paymentType === 'all' || 
-        transaction.payment_method === filters.paymentType;
+      // Only show Cash or UPI payments if selected in filter
+      let matchesPaymentType = true;
+      if (filters.paymentType === 'Cash' || filters.paymentType === 'UPI') {
+        matchesPaymentType = transaction.payment_method === filters.paymentType;
+      } else if (filters.paymentType === 'all') {
+        matchesPaymentType = transaction.payment_method === 'Cash' || transaction.payment_method === 'UPI';
+      }
 
       return matchesPaymentStatus && matchesReceiptPreference && matchesPaymentType;
     });
@@ -233,7 +250,17 @@ function AdminTransactions() {
       ...prev,
       [name]: value
     }));
+    setCurrentPage(1); // Reset to first page on filter change
   };
+
+  // Pagination logic (move to component scope)
+  const paginatedTransactions = () => {
+    const filtered = getFilteredTransactions();
+    const startIdx = (currentPage - 1) * rowsPerPage;
+    return filtered.slice(startIdx, startIdx + rowsPerPage);
+  };
+  const totalFiltered = getFilteredTransactions().length;
+  const totalPages = Math.ceil(totalFiltered / rowsPerPage);
 
   const handleGenerateReceipt = async (transaction) => {
     try {
@@ -345,7 +372,8 @@ function AdminTransactions() {
             <select
               className="filter-select"
               value={filters.paymentStatus}
-              onChange={(e) => setFilters(prev => ({ ...prev, paymentStatus: e.target.value }))}
+              name="paymentStatus"
+              onChange={handleFilterChange}
             >
               <option value="all">All Status</option>
               <option value="success">Success</option>
@@ -358,9 +386,11 @@ function AdminTransactions() {
             <select
               className="filter-select"
               value={filters.paymentType}
-              onChange={(e) => setFilters(prev => ({ ...prev, paymentType: e.target.value }))}
+              name="paymentType"
+              onChange={handleFilterChange}
             >
               <option value="all">All Payment Types</option>
+              <option value="Cash">Cash</option>
               <option value="UPI">UPI</option>
               <option value="card">Card</option>
               <option value="netbanking">Net Banking</option>
@@ -371,17 +401,20 @@ function AdminTransactions() {
             <select
               className="filter-select"
               value={filters.receiptPreference}
-              onChange={(e) => setFilters(prev => ({ ...prev, receiptPreference: e.target.value }))}
+              name="receiptPreference"
+              onChange={handleFilterChange}
             >
               <option value="all">All Receipt Preferences</option>
               <option value="whatsapp">WhatsApp</option>
-              <option value="email">Email</option>
-              <option value="both">Both</option>
+              <option value="download">Download Now</option>
             </select>
           </div>
           <button className="btn" style={{ marginLeft: 'auto' }} onClick={() => fetchRecentTransactions()}>
             <svg viewBox="0 0 24 24" style={{ width: 20, height: 20, verticalAlign: 'middle', marginRight: 6 }}><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.64-.66 3.13-1.76 4.24l1.42 1.42C19.07 16.07 20 14.13 20 12c0-4.42-3.58-8-8-8zm-6 6c0-1.64.66-3.13 1.76-4.24L6.34 4.34C4.93 5.93 4 7.87 4 10c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
             Refresh
+          </button>
+          <button className="btn primary" style={{ marginLeft: 8 }} onClick={e => { e.preventDefault(); setTransactions(getFilteredTransactions()); }}>
+            Apply Filter
           </button>
         </div>
 
@@ -393,66 +426,80 @@ function AdminTransactions() {
               <p>Loading transactions...</p>
             </div>
           ) : (
-            <table className="transactions-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Amount Paid</th>
-                  <th>Total Amount</th>
-                  <th>Balance</th>
-                  <th>Timestamp</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map(transaction => {
-                  const balanceAmount = Math.max(0, parseFloat(transaction.total_amount || 0) - parseFloat(transaction.amount_paid || 0));
-                  const addressText = transaction.resident_type === 'Sankalp Resident' 
-                    ? `${transaction.wing}-${transaction.flat}, ${transaction.building}`
-                    : 'Outsider';
-                  return (
-                    <tr key={transaction.id}>
-                      <td>{transaction.id}</td>
-                      <td>{transaction.name}</td>
-                      <td>{transaction.phone}</td>
-                      <td>{addressText}</td>
-                      <td>₹{parseFloat(transaction.amount_paid || transaction.amount).toLocaleString()}</td>
-                      <td>₹{parseFloat(transaction.total_amount || transaction.amount).toLocaleString()}</td>
-                      <td>₹{balanceAmount.toLocaleString()}</td>
-                      <td>{new Date(transaction.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
-                      <td className="actions-cell" style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
-                        <button 
-                          className="btn-icon success"
-                          onClick={() => handleGenerateReceipt(transaction)}
-                          disabled={generatingReceipt}
-                          title="Download PDF"
-                        >
-                          <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zm7-18C6.48 2 2 6.48 2 12c0 5.52 4.48 10 10 10s10-4.48 10-10c0-5.52-4.48-10-10-10zm1 14h-2v-6H8l4-4 4 4h-3v6z"/></svg>
-                        </button>
-                        <button 
-                          className="btn-icon warning"
-                          onClick={() => handleSendWhatsApp(transaction)}
-                          disabled={sendingWhatsApp}
-                          title="Send WhatsApp"
-                        >
-                          <svg viewBox="0 0 32 32"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.693 4.607 1.893 6.527L4 29l7.646-2.527A12.96 12.96 0 0 0 16 27c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 22c-1.953 0-3.805-.527-5.393-1.527l-.387-.24-4.547 1.5 1.52-4.44-.253-.4C6.527 18.805 6 16.953 6 15c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10zm5.293-7.293c-.293-.293-.707-.293-1 0l-2.293 2.293V11c0-.553-.447-1-1-1s-1 .447-1 1v9.293l-2.293-2.293c-.293-.293-.707-.293-1 0s-.293.707 0 1l3.293 3.293c.195.195.451.293.707.293s.512-.098.707-.293l3.293-3.293c.293-.293.293-.707 0-1z"/></svg>
-                        </button>
-                        <button 
-                          className="btn-icon error"
-                          onClick={() => confirmDelete(transaction)}
-                          title="Delete"
-                        >
-                          <svg viewBox="0 0 24 24"><path d="M6 19c0 1.104.896 2 2 2h8c1.104 0 2-.896 2-2V7H6v12zm3.46-9.12l1.06 1.06L12 11.59l1.47-1.47 1.06 1.06L13.06 12.65l1.47 1.47-1.06 1.06L12 13.71l-1.47 1.47-1.06-1.06 1.47-1.47-1.47-1.47zM15.5 4l-1-1h-5l-1 1H5v2h14V4h-3.5z"/></svg>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <>
+              <table className="transactions-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Amount Paid</th>
+                    <th>Total Amount</th>
+                    <th>Balance</th>
+                    <th>Payment Method</th>
+                    <th>📬 Receipt Delivery Preference</th>
+                    <th>Timestamp</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedTransactions().map(transaction => {
+                    const balanceAmount = Math.max(0, parseFloat(transaction.total_amount || 0) - parseFloat(transaction.amount_paid || 0));
+                    const addressText = transaction.resident_type === 'Sankalp Resident' 
+                      ? `${transaction.wing}-${transaction.flat}, ${transaction.building}`
+                      : 'Outsider';
+                    return (
+                      <tr key={transaction.id}>
+                        <td>{transaction.id}</td>
+                        <td>{transaction.name}</td>
+                        <td>{transaction.phone}</td>
+                        <td>{addressText}</td>
+                        <td>₹{parseFloat(transaction.amount_paid || transaction.amount).toLocaleString()}</td>
+                        <td>₹{parseFloat(transaction.total_amount || transaction.amount).toLocaleString()}</td>
+                        <td>₹{balanceAmount.toLocaleString()}</td>
+                        <td>{transaction.payment_method || 'N/A'}</td>
+                        <td>{transaction.receipt_delivery_preference || 'N/A'}</td>
+                        <td>{new Date(transaction.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+                        <td className="actions-cell" style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
+                          <button 
+                            className="btn success"
+                            onClick={() => handleGenerateReceipt(transaction)}
+                            disabled={generatingReceipt}
+                            title="Download PDF"
+                          >
+                            Download
+                          </button>
+                          <button 
+                            className="btn warning"
+                            onClick={() => handleSendWhatsApp(transaction)}
+                            disabled={sendingWhatsApp}
+                            title="Send WhatsApp"
+                          >
+                            WhatsApp
+                          </button>
+                          <button 
+                            className="btn error"
+                            onClick={() => confirmDelete(transaction)}
+                            title="Delete"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="pagination-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '1.5rem 0' }}>
+                  <button className="btn" onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage === 1}>&lt; Prev</button>
+                  <span style={{ margin: '0 1rem', color: '#fff' }}>Page {currentPage} of {totalPages}</span>
+                  <button className="btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}>Next &gt;</button>
+                </div>
+              )}
+            </>
           )}
         </div>
 

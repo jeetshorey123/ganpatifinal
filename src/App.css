@@ -263,6 +263,12 @@ body {
 
 /* Main Content Area */
 .app-main {
+/* Shift About Us page a bit to the left on mobile devices */
+@media (max-width: 600px) {
+  .about-us-page {
+    margin-left: -20px;
+  }
+}
   padding-top: 80px;
   min-height: 100vh;
   display: flex;
@@ -272,6 +278,14 @@ body {
   margin: 0 auto;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
+/* Shift main content even more to the left on mobile devices */
+@media (max-width: 600px) {
+  .app-router,
+  .home-page,
+  .app-main {
+    margin-left: -56px;
+  }
+}
 }
 
 /* Home Page / Donation Form */
