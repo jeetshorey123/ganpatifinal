@@ -1,6 +1,6 @@
 {
+  "public": "build",
   "rewrites": [
-    { "source": "/ganpati/:path*", "destination": "/build/:path*" }
-  ],
-  "public": "build"
+    { "source": "/ganpati/:path*", "destination": "/:path*" }
+  ]
 }
