@@ -63,8 +63,10 @@ function AppRouter() {
               <div className="logo-glow-ring"></div>
             </div>
             <div className="brand-text">
-              <h1>Poonam Sagarcha Raja</h1>
+              <h1>Poonam Sagar Cha Raja</h1>
               <div className="brand-subtitle">Divine Donation Portal</div>
+              <div className="brand-subtitle">मन्नत के गणपति</div>
+              <div className="brand-subtitle">नवसाचा गणपती</div>
             </div>
           </div>
           
@@ -75,45 +77,47 @@ function AppRouter() {
             <span></span>
           </div>
           
-          {/* Navigation Links */}
-          <div className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
-            <button 
-              className={currentPage === 'donation' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('donation')}
-            >
-              <span>💰 Donation Form</span>
-            </button>
-            <button 
-              className={currentPage === 'about' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('about')}
-            >
-              <span>🏠 About Us</span>
-            </button>
-            <button 
-              className={currentPage === 'export' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('export')}
-            >
-              <span>📊 Export Data</span>
-            </button>
-            <button 
-              className={currentPage === 'admin' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('admin')}
-            >
-              <span>🛡️ Admin</span>
-            </button>
-            <button 
-              className={currentPage === 'privacy' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('privacy')}
-            >
-              <span>🔒 Privacy Policy</span>
-            </button>
-            <button 
-              className={currentPage === 'terms' ? 'nav-btn active' : 'nav-btn'}
-              onClick={() => handlePageChange('terms')}
-            >
-              <span>📋 Terms & Conditions</span>
-            </button>
-          </div>
+          {/* Navigation Links - only show when menu is open */}
+          {isMenuOpen && (
+            <div className="nav-links active">
+              <button 
+                className={currentPage === 'donation' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('donation')}
+              >
+                <span>💰 Donation Form</span>
+              </button>
+              <button 
+                className={currentPage === 'about' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('about')}
+              >
+                <span>🏠 About Us</span>
+              </button>
+              <button 
+                className={currentPage === 'export' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('export')}
+              >
+                <span>📊 Export Data</span>
+              </button>
+              <button 
+                className={currentPage === 'admin' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('admin')}
+              >
+                <span>🛡️ Admin</span>
+              </button>
+              <button 
+                className={currentPage === 'privacy' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('privacy')}
+              >
+                <span>🔒 Privacy Policy</span>
+              </button>
+              <button 
+                className={currentPage === 'terms' ? 'nav-btn active' : 'nav-btn'}
+                onClick={() => handlePageChange('terms')}
+              >
+                <span>📋 Terms & Conditions</span>
+              </button>
+            </div>
+          )}
         </div>
       </nav>
       
