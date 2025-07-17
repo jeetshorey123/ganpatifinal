@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import ExportData from './ExportData';
@@ -573,15 +573,18 @@ May Lord Ganesha bless you and your family.
         <div className="hero-content">
           <div className="hero-text">
             <h1 className="hindi-hero-title">
-  पूणम सागर चा राजा<br />
-  <span style={{ fontSize: '1.3rem', display: 'inline-block', lineHeight: '1.1' }}>संकल्प उत्सव समिति</span>
+  पूनम सागर चा राजा<br />
+  <span style={{ fontSize: '1.3rem', display: 'inline-block', lineHeight: '1.1' }}>संकल्प उत्सव समिती</span>
 </h1>
             <p className="hero-subtitle hero-subtitle-red-glow">मन्नत के गणपति&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;नवसाचा गणपती</p>
 
             <div className="hero-cta">
               <button className="cta-button" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>Donate Now</button>
-              <button className="cta-button secondary" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>
-                Learn More
+              <button
+                className="cta-button secondary"
+                onClick={() => window.open('https://www.youtube.com/@PoonamSagarcharaja/streams', '_blank')}
+              >
+                join live aarti🪔
               </button>
             </div>
           </div>
@@ -1115,3 +1118,4 @@ function AboutUs() {
 }
 
 export default AppRouter;
+
