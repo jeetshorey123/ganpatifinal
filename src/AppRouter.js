@@ -572,14 +572,12 @@ May Lord Ganesha bless you and your family.
       <section className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
-            <h1 className="hero-title">Poonam Sagar Cha Raja</h1>
-            <p className="hero-subtitle">Divine Donation Portal</p>
-            <p className="hero-subtitle">मन्नत के गणपति</p>
-            <p className="hero-subtitle">नवसाचा गणपती</p>
-            <p className="hero-description">
-              Support our community celebrations and contribute to the growth of our cultural heritage.
-              Every donation helps us bring more joy and prosperity to our festivities.
-            </p>
+            <h1 className="hindi-hero-title">
+  पूणम सागर चा राजा<br />
+  <span style={{ fontSize: '1.3rem', display: 'inline-block', lineHeight: '1.1' }}>संकल्प उत्सव समिति</span>
+</h1>
+            <p className="hero-subtitle hero-subtitle-red-glow">मन्नत के गणपति&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;नवसाचा गणपती</p>
+
             <div className="hero-cta">
               <button className="cta-button" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>Donate Now</button>
               <button className="cta-button secondary" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>
@@ -940,6 +938,8 @@ function PrivacyPolicy() {
           <li>Jeet: <strong>9833232395</strong></li>
           <li>Rishi: <strong>8169912193</strong></li>
           <li>Email: <strong>poonamsagarcharaja@gmail.com</strong></li>
+          <li>sankalp society,poonam sagar complex,mira road east,mumbai</li>
+
         </ul>
       </div>
     </div>
@@ -981,6 +981,7 @@ function TermsAndConditions() {
           <li>Jeet: <strong>9833232395</strong></li>
           <li>Rishi: <strong>8169912193</strong></li>
           <li>Email: <strong>poonamsagarcharaja@gmail.com</strong></li>
+          <li>sankalp society,poonam sagar complex,mira road east,mumbai</li>
         </ul>
       </div>
     </div>

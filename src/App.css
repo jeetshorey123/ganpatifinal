@@ -1,3 +1,74 @@
+.hero-subtitle-red-glow {
+  color: #ff2222;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ff2222, #ff6666, #ff2222 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  text-shadow:
+    0 0 8px #ff2222,
+    0 0 16px #ff6666,
+    0 0 24px #ff2222,
+    0 0 32px #ff6666;
+  animation: red-glow-move 2.5s linear infinite;
+}
+
+@keyframes red-glow-move {
+  0% {
+    background-position: 0% 50%;
+    text-shadow: 0 0 8px #ff2222, 0 0 16px #ff6666, 0 0 24px #ff2222;
+  }
+  50% {
+    background-position: 100% 50%;
+    text-shadow: 0 0 16px #ff6666, 0 0 32px #ff2222, 0 0 48px #ff6666;
+  }
+  100% {
+    background-position: 0% 50%;
+    text-shadow: 0 0 8px #ff2222, 0 0 16px #ff6666, 0 0 24px #ff2222;
+  }
+}
+/* Golden glow moving font for Hindi hero title */
+/* Shree Devanagari 714 Bold for Hindi hero title */
+@font-face {
+  font-family: 'Shree Devanagari 714 Bold';
+  src: local('Shree Devanagari 714 Bold'), local('ShreeDev714Bold');
+  font-weight: bold;
+  font-style: normal;
+}
+
+.hindi-hero-title {
+  font-family: 'Shree Devanagari 714 Bold', 'Noto Sans Devanagari', 'Mangal', 'Kokila', 'Arial', sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #fffbe6 10%, #ffd700 40%, #fffbe6 60%, #ffd700 90%);
+  background-size: 200% auto;
+  color: #ffd700;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  text-shadow: 0 0 10px #ffd700, 0 0 20px #fffbe6, 0 0 40px #ffd700;
+  animation: gold-glow-move 3s linear infinite;
+  letter-spacing: 2px;
+  margin-bottom: 0.05rem;
+}
+
+@keyframes gold-glow-move {
+  0% {
+    background-position: 0% 50%;
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #fffbe6, 0 0 40px #ffd700;
+  }
+  50% {
+    background-position: 100% 50%;
+    text-shadow: 0 0 20px #fffbe6, 0 0 40px #ffd700, 0 0 80px #fffbe6;
+  }
+  100% {
+    background-position: 0% 50%;
+    text-shadow: 0 0 10px #ffd700, 0 0 20px #fffbe6, 0 0 40px #ffd700;
+  }
+}
 /* Futuristic Theme Variables */
 :root {
   --primary-brown: #8B4513;
@@ -354,27 +425,44 @@ body {
   gap: 1.5rem;
 }
 
-.hero-title {
-  font-size: 3rem;
-  font-weight: 800;
-  line-height: 1.2;
-  background: linear-gradient(to right, #ffffff, var(--neon-blue), #ffffff);
+/* Use Khand Bold for the Hindi hero title, fallback to Khand, Arial, sans-serif */
+  font-family: 'Khand Bold', 'Khand', Arial, sans-serif;
+  font-size: 2.7rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #fff700, #ffd700, #fff700, #ffd700, #fff700);
+  background-size: 400% 400%;
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: titleGlow 2s ease-in-out infinite alternate;
-}
+  animation: gold-glow-move 3s linear infinite;
+  text-shadow:
+    0 0 8px #fff700,
+    0 0 16px #ffd700,
+    0 0 24px #fff700,
+    0 0 32px #ffd700;
+  letter-spacing: 2px;
+  margin-bottom: 0.15rem;
+  text-align: center;
 
-@keyframes titleGlow {
-  from { text-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
-  to { text-shadow: 0 0 40px rgba(157, 0, 255, 0.4), 0 0 80px rgba(157, 0, 255, 0.2); }
+.hindi-hero-subtitle {
+  font-family: 'Shree Devanagari 714 Bold', 'Noto Sans Devanagari', 'Mangal', 'Kokila', 'Arial', sans-serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: linear-gradient(90deg, #fffbe6 10%, #ffd700 40%, #fffbe6 60%, #ffd700 90%);
+  background-size: 200% auto;
+  color: #ffd700;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  text-shadow: 0 0 10px #ffd700, 0 0 20px #fffbe6, 0 0 40px #ffd700;
+  animation: gold-glow-move 3s linear infinite;
+  letter-spacing: 2px;
+  margin-bottom: 0.02rem;
+  text-align: center;
 }
 
 .hero-subtitle {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #94a3b8;
-  margin-bottom: 1rem;
+  margin-top: 0.02rem !important;
 }
 
 .hero-description {

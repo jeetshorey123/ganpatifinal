@@ -10,6 +10,7 @@ function Footer() {
         <div className="community-info">
           <h4>🕉️ Poonam Sagarcha Raja</h4>
           <p>Supporting our community through devotion and service</p>
+          <p>Address:sankalp society,poonam sagar complex,mira road east,mumbai</p>
         </div>
 
         <div className="contact-info">
