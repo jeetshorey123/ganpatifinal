@@ -1,0 +1,53 @@
+[33m179a05e[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{0}: commit: commitfinal
+[33m9eb4382[m HEAD@{1}: commit: change 15
+[33m2789b16[m HEAD@{2}: reset: moving to HEAD~
+[33mceac072[m HEAD@{3}: commit: change 15
+[33m2789b16[m HEAD@{4}: commit: Final
+[33m2190d7a[m HEAD@{5}: commit (initial): change 1
+[33m4f574fc[m HEAD@{7}: commit (initial): change 1
+[33maf244cb[m HEAD@{9}: commit (initial): Add empty commit
+[33m088b47d[m HEAD@{11}: reset: moving to HEAD~
+[33m4bbb427[m HEAD@{12}: reset: moving to HEAD~
+[33mc8a223c[m HEAD@{13}: reset: moving to HEAD~
+[33mb29386a[m HEAD@{14}: reset: moving to HEAD~
+[33m2ce2fe8[m HEAD@{15}: commit: Merge branch 'main' of https://github.com/jeetshorey123/ganpatifinal
+[33mb29386a[m HEAD@{16}: reset: moving to HEAD~
+[33mc9ee7cb[m HEAD@{17}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33mb29386a[m HEAD@{18}: commit: change 2
+[33mc8a223c[m HEAD@{19}: reset: moving to HEAD~
+[33m4f8ae1d[m HEAD@{20}: commit: change 2
+[33mc8a223c[m HEAD@{21}: reset: moving to HEAD~
+[33md33e9f8[m HEAD@{22}: commit: change 2
+[33mc8a223c[m HEAD@{23}: reset: moving to HEAD~
+[33me618fb0[m HEAD@{24}: commit: change 2
+[33mc8a223c[m HEAD@{25}: reset: moving to HEAD~
+[33mfc9a55f[m HEAD@{26}: reset: moving to HEAD~
+[33macb69d4[m HEAD@{27}: reset: moving to HEAD~
+[33m8f65901[m HEAD@{28}: reset: moving to HEAD~
+[33m26985e2[m HEAD@{29}: reset: moving to HEAD~
+[33m5fb5720[m HEAD@{30}: reset: moving to HEAD~
+[33m14d2b33[m HEAD@{31}: reset: moving to HEAD~
+[33m4861e35[m HEAD@{32}: commit: change 8
+[33m14d2b33[m HEAD@{33}: reset: moving to HEAD~
+[33m3b50331[m HEAD@{34}: reset: moving to HEAD~
+[33m738c73b[m HEAD@{35}: reset: moving to HEAD~
+[33mc31feac[m HEAD@{36}: reset: moving to HEAD~
+[33mde8cc8b[m HEAD@{37}: reset: moving to HEAD~
+[33m0992be2[m HEAD@{38}: reset: moving to HEAD~
+[33me0aa55e[m HEAD@{39}: reset: moving to HEAD~
+[33m9fb273d[m HEAD@{40}: commit: change 13
+[33me0aa55e[m HEAD@{41}: commit: change 12
+[33m0992be2[m HEAD@{42}: commit: change11
+[33mde8cc8b[m HEAD@{43}: commit: change11
+[33mc31feac[m HEAD@{44}: commit: change10
+[33m738c73b[m HEAD@{45}: commit: change 9
+[33m3b50331[m HEAD@{46}: commit: change 8
+[33m14d2b33[m HEAD@{47}: commit: change 7
+[33m5fb5720[m HEAD@{48}: commit: change 6
+[33m26985e2[m HEAD@{49}: commit: change 5
+[33m8f65901[m HEAD@{50}: commit: change 4
+[33macb69d4[m HEAD@{51}: commit: change 3
+[33mfc9a55f[m HEAD@{52}: commit: change 2
+[33mc8a223c[m HEAD@{53}: commit: change 1
+[33m4bbb427[m HEAD@{54}: commit: final
+[33m088b47d[m HEAD@{55}: commit (initial): Add empty commit

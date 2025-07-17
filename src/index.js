@@ -5,11 +5,8 @@ import './index.css'; // Global styles
 import AppRouter from './AppRouter'; // Using AppRouter for more functionality
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
 root.render(
     <React.StrictMode>
-        <>
-            <AppRouter />
-        </>
+        <AppRouter />
     </React.StrictMode>
 );
