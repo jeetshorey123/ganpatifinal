@@ -30,6 +30,18 @@ function AppRouter() {
   const [currentPage, setCurrentPage] = useState('donation');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Listen for custom navigation events from Footer
+  React.useEffect(() => {
+    const handleNavigateToPage = (e) => {
+      if (typeof e.detail === 'string') {
+        setCurrentPage(e.detail);
+        setIsMenuOpen(false);
+      }
+    };
+    window.addEventListener('navigateToPage', handleNavigateToPage);
+    return () => window.removeEventListener('navigateToPage', handleNavigateToPage);
+  }, []);
+
   const renderPage = () => {
     switch (currentPage) {
       case 'export':
@@ -898,50 +910,40 @@ function PrivacyPolicy() {
       <div className="legal-container">
         <h1>Privacy Policy</h1>
         <p>Last updated: July 2025</p>
-        <p>
-          This Privacy Policy describes how Poonam Sagarcha Raja collects, uses, and protects your personal information when you use our website and make donations. We are committed to safeguarding your privacy and ensuring transparency in our data practices.
-        </p>
+        <p>This Privacy Policy describes how Poonam Sagarcha Raja ("we", "us", "our") collects, uses, and protects your personal information in accordance with Indian law and payment gateway (Razorpay) requirements.</p>
         <h2>1. Information We Collect</h2>
         <ul>
-          <li>Name, phone number, and address (for residents)</li>
+          <li>Name, phone number, and address (for donation receipts and communication)</li>
           <li>Email address (if provided)</li>
-          <li>Donation/payment details (amount, payment ID, method, etc.)</li>
+          <li>Transaction/payment details (amount, payment ID, method, status)</li>
         </ul>
-        <h2>2. How We Use Your Information</h2>
+        <h2>2. Use of Information</h2>
         <ul>
-          <li>To process and record your donations</li>
-          <li>To send receipts and confirmations</li>
-          <li>To respond to your queries and provide support</li>
+          <li>To process and confirm your donation</li>
+          <li>To generate and deliver receipts (via WhatsApp or download)</li>
           <li>To comply with legal and regulatory requirements</li>
+          <li>To respond to your queries and provide support</li>
         </ul>
         <h2>3. Data Security</h2>
-        <p>
-          All payment transactions are processed securely via Razorpay. We do not store your card or banking information on our servers. We use industry-standard security measures to protect your data from unauthorized access or disclosure.
-        </p>
-        <h2>4. Refund Policy</h2>
-        <p>
-          All donations are voluntary and non-refundable. If you believe a transaction was made in error, please contact us within 24 hours at <strong>poonamsagarcharaja@gmail.com</strong> or call Jeet: 9833232395, Rishi: 8169912193. Refunds will be considered only in exceptional cases and at the sole discretion of the management.
-        </p>
+        <p>We use industry-standard security measures to protect your data. All payments are processed securely via Razorpay. We do not store your card or banking details on our servers.</p>
+        <h2>4. Data Sharing</h2>
+        <p>We do not sell or share your personal data with third parties, except as required by law or for payment processing with trusted partners (e.g., Razorpay).</p>
         <h2>5. Cookies</h2>
-        <p>
-          Our website may use cookies to enhance your browsing experience. No personally identifiable information is stored in cookies.
-        </p>
-        <h2>6. Sharing Your Information</h2>
-        <p>
-          We do not sell, trade, or share your personal data with third parties, except as required by law or for payment processing.
-        </p>
-        <h2>7. Changes to This Policy</h2>
-        <p>
-          We may update this Privacy Policy from time to time. Any changes will be posted on this page with a new update date.
-        </p>
-        <h2>8. Contact Us</h2>
-        <p>
-          If you have any questions or concerns about this Privacy Policy or your data, please contact us:<br />
-          Jeet: <strong>9833232395</strong><br />
-          Rishi: <strong>8169912193</strong><br />
-          Email: <strong>poonamsagarcharaja@gmail.com</strong><br />
-          Address: sankalp society, poonam sagar complex, mira road east, mumbai
-        </p>
+        <p>We may use cookies to enhance your experience. No sensitive personal data is stored in cookies.</p>
+        <h2>6. Refund Policy</h2>
+        <p>Donations are generally non-refundable. However, if you made a payment in error or a duplicate payment, please contact us within 48 hours for resolution. Refunds, if approved, will be processed to the original payment method within 7-10 business days.</p>
+        <h2>7. Consent</h2>
+        <p>By using this website and submitting your information, you consent to this Privacy Policy and our use of your data as described above.</p>
+        <h2>8. Changes to Policy</h2>
+        <p>We may update this policy from time to time. Changes will be posted on this page with a new effective date.</p>
+        <h2>9. Contact Information</h2>
+        <p>For any privacy-related questions, refund requests, or legal concerns, contact:</p>
+        <ul>
+          <li><strong>Organization:</strong> Poonam Sagarcha Raja</li>
+          <li><strong>Email:</strong> poonamsagarcharaja@gmail.com</li>
+          <li><strong>Phone:</strong> Jeet: 9833232395, Rishi: 8169912193</li>
+          <li><strong>Address:</strong> Sankalp Society, Poonam Sagar Complex, Mira Road East, Mumbai, Maharashtra, India</li>
+        </ul>
       </div>
     </div>
   );
@@ -953,49 +955,40 @@ function TermsAndConditions() {
       <div className="legal-container">
         <h1>Terms & Conditions</h1>
         <p>Last updated: July 2025</p>
-        <p>
-          By accessing and using this website, you agree to the following terms and conditions. Please read them carefully before making a donation.
-        </p>
-        <h2>1. Donations & Refund Policy</h2>
-        <p>
-          All donations made through this website are voluntary and non-refundable. If you believe a payment was made in error, contact us within 24 hours at <strong>poonamsagarcharaja@gmail.com</strong> or call Jeet: 9833232395, Rishi: 8169912193. Refunds will be considered only in exceptional cases and at the sole discretion of the management.
-        </p>
-        <h2>2. Payment Processing</h2>
-        <p>
-          All payments are processed securely via Razorpay. We do not store your card or banking information. We are not responsible for errors or delays caused by third-party payment providers.
-        </p>
-        <h2>3. Receipt Generation</h2>
-        <p>
-          After a successful donation, a digital receipt will be generated and delivered via WhatsApp or available for download as a PDF, based on your selected preference.
-        </p>
-        <h2>4. Use of Website</h2>
-        <p>
-          You agree to use this website only for lawful purposes. Any misuse, fraudulent activity, or attempts to hack the site will result in permanent blocking and legal action if necessary.
-        </p>
-        <h2>5. Intellectual Property</h2>
-        <p>
-          All content, logos, and images on this website are the property of Poonam Sagarcha Raja unless otherwise stated. Unauthorized use is strictly prohibited.
-        </p>
-        <h2>6. Data Security</h2>
-        <p>
-          We take appropriate measures to protect your data. Payment information is handled securely by Razorpay. We do not store sensitive payment details on our servers.
-        </p>
-        <h2>7. WhatsApp Receipt Delivery</h2>
-        <p>
-          WhatsApp receipt delivery requires admin authentication for security. We are not responsible for delivery failures due to incorrect phone numbers or WhatsApp service issues.
-        </p>
-        <h2>8. Changes to Terms</h2>
-        <p>
-          We reserve the right to modify these terms at any time. Continued use of the website implies acceptance of any updated terms.
-        </p>
-        <h2>9. Contact Us</h2>
-        <p>
-          For any queries regarding these terms, please contact:<br />
-          Jeet: <strong>9833232395</strong><br />
-          Rishi: <strong>8169912193</strong><br />
-          Email: <strong>poonamsagarcharaja@gmail.com</strong><br />
-          Address: sankalp society, poonam sagar complex, mira road east, mumbai
-        </p>
+        <p>These Terms & Conditions govern your use of the Poonam Sagarcha Raja donation portal and all donations made through this website. By using this site, you agree to the following terms, which are designed to comply with Indian law and Razorpay requirements.</p>
+        <h2>1. Donations & Payments</h2>
+        <ul>
+          <li>All donations are voluntary and non-refundable. If you make a payment in error or a duplicate payment, contact us within 48 hours for resolution. Refunds, if approved, will be processed to the original payment method within 7-10 business days.</li>
+          <li>Payments are processed securely via Razorpay. We do not store your card or banking details.</li>
+        </ul>
+        <h2>2. Receipts</h2>
+        <ul>
+          <li>Receipts are generated and delivered via WhatsApp or as a downloadable PDF, based on your selected preference.</li>
+        </ul>
+        <h2>3. Use of Website</h2>
+        <ul>
+          <li>You agree to use this website only for lawful purposes. Any misuse, fraud, or unauthorized activity is strictly prohibited and may result in legal action.</li>
+        </ul>
+        <h2>4. Privacy & Data</h2>
+        <ul>
+          <li>Your personal data is handled as per our Privacy Policy and is not shared with third parties except as required for payment processing or by law.</li>
+        </ul>
+        <h2>5. Limitation of Liability</h2>
+        <ul>
+          <li>We are not responsible for payment gateway errors, technical issues, or delays caused by third-party providers (e.g., Razorpay).</li>
+        </ul>
+        <h2>6. Changes to Terms</h2>
+        <ul>
+          <li>We reserve the right to update these terms at any time. Continued use of the website implies acceptance of the latest terms.</li>
+        </ul>
+        <h2>7. Contact & Legal</h2>
+        <ul>
+          <li>For any queries, refund requests, or legal concerns, contact:</li>
+          <li><strong>Organization:</strong> Poonam Sagarcha Raja</li>
+          <li><strong>Email:</strong> poonamsagarcharaja@gmail.com</li>
+          <li><strong>Phone:</strong> Jeet: 9833232395, Rishi: 8169912193</li>
+          <li><strong>Address:</strong> Sankalp Society, Poonam Sagar Complex, Mira Road East, Mumbai, Maharashtra, India</li>
+        </ul>
       </div>
     </div>
   );
@@ -1128,3 +1121,4 @@ function AboutUs() {
 }
 
 export default AppRouter;
+
