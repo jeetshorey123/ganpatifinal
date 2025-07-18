@@ -844,23 +844,25 @@ May Lord Ganesha bless you and your family.
                     className="form-input"
                     onWheel={e => e.target.blur()}
                   />
-                  <div className="form-group">
-                    <label htmlFor="upiTransactionId">UPI Transaction ID <span style={{color: 'red'}}>*</span></label>
-                    <input
-                      type="text"
-                      id="upiTransactionId"
-                      name="upiTransactionId"
-                      value={formData.upiTransactionId || ''}
-                      onChange={handleChange}
-                      required
-                      pattern="[0-9]{12}"
-                      maxLength={12}
-                      minLength={12}
-                      inputMode="numeric"
-                      placeholder="Enter 12-digit UPI transaction/reference ID"
-                      className="form-input"
-                    />
-                  </div>
+                  {formData.paymentMethod === 'UPI' && (
+                    <div className="form-group">
+                      <label htmlFor="upiTransactionId">UPI Transaction ID <span style={{color: 'red'}}>*</span></label>
+                      <input
+                        type="text"
+                        id="upiTransactionId"
+                        name="upiTransactionId"
+                        value={formData.upiTransactionId || ''}
+                        onChange={handleChange}
+                        required
+                        pattern="[0-9]{12}"
+                        maxLength={12}
+                        minLength={12}
+                        inputMode="numeric"
+                        placeholder="Enter 12-digit UPI transaction/reference ID"
+                        className="form-input"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
