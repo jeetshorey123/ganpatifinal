@@ -894,7 +894,7 @@ May Lord Ganesha bless you and your family.
                         boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
                       }}
                       onClick={() => {
-                        window.location.href = 'gpay://';
+                        window.location.href = 'gpay://pay?phone=%2B919967606080';
                       }}
                     >
                       Pay with UPI (Google Pay)
