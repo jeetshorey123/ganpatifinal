@@ -858,14 +858,120 @@ May Lord Ganesha bless you and your family.
                  formData.name && formData.phone && formData.residentType &&
                  (formData.residentType === 'Outsider' || (formData.wing && formData.flat && formData.building)) &&
                  formData.totalAmount && formData.amountPaid && (
-                  <button
-                    type="button"
-                    onClick={handleRazorpayPayment}
-                    disabled={isPaymentProcessing}
-                    className="razorpay-btn"
-                  >
-                    {isPaymentProcessing ? '⏳ Processing...' : '💳 Pay with UPI'}
-                  </button>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                    <button
+                      type="button"
+                      className="razorpay-btn"
+                      style={{
+                        display: 'inline-block',
+                        textDecoration: 'none',
+                        fontSize: '1.25rem',
+                        padding: '1rem 2.5rem',
+                        background: '#00c853',
+                        color: '#fff',
+                        borderRadius: '8px',
+                        fontWeight: 'bold',
+                        marginBottom: '0.5rem',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
+                      }}
+                      onClick={() => {
+                        window.location.href = 'gpay://';
+                      }}
+                    >
+                      Pay with UPI (Google Pay)
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        fontSize: '1rem',
+                        padding: '0.5rem 1.5rem',
+                        background: '#fff',
+                        color: '#00796b',
+                        borderRadius: '6px',
+                        fontWeight: 'bold',
+                        border: '2px solid #00796b',
+                        cursor: 'pointer',
+                        marginBottom: '0.5rem'
+                      }}
+                      onClick={() => {
+                        const phone = '+91 9967606080';
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                          navigator.clipboard.writeText(phone)
+                            .then(() => alert('Phone number copied!'))
+                            .catch(() => alert('Failed to copy phone number.'));
+                        } else {
+                          // Fallback for older browsers
+                          const tempInput = document.createElement('input');
+                          tempInput.value = phone;
+                          document.body.appendChild(tempInput);
+                          tempInput.select();
+                          try {
+                            document.execCommand('copy');
+                            alert('Phone number copied!');
+                          } catch (err) {
+                            alert('Failed to copy phone number.');
+                          }
+                          document.body.removeChild(tempInput);
+                        }
+                      }}
+                    >
+                      Copy Phone Number (+91 9967606080)
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        fontSize: '1rem',
+                        padding: '0.5rem 1.5rem',
+                        background: '#fff',
+                        color: '#00c853',
+                        borderRadius: '6px',
+                        fontWeight: 'bold',
+                        border: '2px solid #00c853',
+                        cursor: 'pointer',
+                        marginBottom: '0.5rem'
+                      }}
+                      onClick={() => {
+                        const upiId = 'simran.mehra0607@okhdfcbank';
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                          navigator.clipboard.writeText(upiId)
+                            .then(() => alert('UPI ID copied!'))
+                            .catch(() => alert('Failed to copy UPI ID.'));
+                        } else {
+                          // Fallback for older browsers
+                          const tempInput = document.createElement('input');
+                          tempInput.value = upiId;
+                          document.body.appendChild(tempInput);
+                          tempInput.select();
+                          try {
+                            document.execCommand('copy');
+                            alert('UPI ID copied!');
+                          } catch (err) {
+                            alert('Failed to copy UPI ID.');
+                          }
+                          document.body.removeChild(tempInput);
+                        }
+                      }}
+                    >
+                      Copy UPI ID
+                    </button>
+                    <img src={require('./scanner.jpg')} alt="UPI QR Scanner" style={{ width: '180px', margin: '0.5rem 0', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} />
+                    <button
+                      type="submit"
+                      className="submit-btn"
+                      style={{
+                        fontSize: '1.1rem',
+                        padding: '0.75rem 2rem',
+                        background: '#8B4513',
+                        color: '#fff',
+                        borderRadius: '6px',
+                        fontWeight: 'bold',
+                        border: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {isPaymentProcessing ? '⏳ Processing...' : '💰 Make Payment'}
+                    </button>
+                  </div>
                 )}
                 
                 {formData.paymentMethod === 'UPI' && 
@@ -1121,4 +1227,3 @@ function AboutUs() {
 }
 
 export default AppRouter;
-
