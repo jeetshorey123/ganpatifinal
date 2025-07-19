@@ -109,7 +109,7 @@ function AppRouter() {
                 className={currentPage === 'donation' ? 'nav-btn active' : 'nav-btn'}
                 onClick={() => handlePageChange('donation')}
               >
-                <span>💰 Donation Form</span>
+                <span>🏠 Home</span>
               </button>
               <button 
                 className={currentPage === 'about' ? 'nav-btn active' : 'nav-btn'}
@@ -591,7 +591,7 @@ May Lord Ganesha bless you and your family.
             <p className="hero-subtitle hero-subtitle-red-glow">मन्नत के गणपति&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;नवसाचा गणपती</p>
 
             <div className="hero-cta">
-              <button className="cta-button" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>Donate Now</button>
+              <button className="cta-button" onClick={() => window.scrollTo({top: document.querySelector('.donation-form-container').offsetTop - 100, behavior: 'smooth'})}>Make Payment</button>
               <button
                 className="cta-button secondary"
                 onClick={() => window.open('https://www.youtube.com/@PoonamSagarcharaja/streams', '_blank')}
@@ -1080,11 +1080,12 @@ function TermsAndConditions() {
       <div className="legal-container">
         <h1>Terms & Conditions</h1>
         <p>Last updated: July 2025</p>
-        <p>These Terms & Conditions govern your use of the Poonam Sagarcha Raja donation portal and all donations made through this website. By using this site, you agree to the following terms, which are designed to comply with Indian law and Razorpay requirements.</p>
+        <p><strong>This company is operated by Jeet Shorey.</strong></p>
+        <p>These Terms & Conditions govern your use of the Poonam Sagarcha Raja donation portal and all donations made through this website. By using this site, you agree to the following terms, which are designed to comply with Indian law and PayU requirements.</p>
         <h2>1. Donations & Payments</h2>
         <ul>
           <li>All donations are voluntary and non-refundable. If you make a payment in error or a duplicate payment, contact us within 48 hours for resolution. Refunds, if approved, will be processed to the original payment method within 7-10 business days.</li>
-          <li>Payments are processed securely via Razorpay. We do not store your card or banking details.</li>
+          <li>Payments are processed securely via PayU. We do not store your card or banking details.</li>
         </ul>
         <h2>2. Receipts</h2>
         <ul>
@@ -1100,7 +1101,7 @@ function TermsAndConditions() {
         </ul>
         <h2>5. Limitation of Liability</h2>
         <ul>
-          <li>We are not responsible for payment gateway errors, technical issues, or delays caused by third-party providers (e.g., Razorpay).</li>
+          <li>We are not responsible for payment gateway errors, technical issues, or delays caused by third-party providers (e.g., PayU).</li>
         </ul>
         <h2>6. Changes to Terms</h2>
         <ul>
@@ -1110,6 +1111,8 @@ function TermsAndConditions() {
         <ul>
           <li>For any queries, refund requests, or legal concerns, contact:</li>
           <li><strong>Organization:</strong> Poonam Sagarcha Raja</li>
+          <li><strong>Email:</strong> shoreyjeet@gmail.com</li>
+          <li><strong>Phone:</strong> 9967606080</li>
           <li><strong>Email:</strong> poonamsagarcharaja@gmail.com</li>
           <li><strong>Phone:</strong> Jeet: 9833232395, Rishi: 8169912193</li>
           <li><strong>Address:</strong> Sankalp Society, Poonam Sagar Complex, Mira Road East, Mumbai, Maharashtra, India</li>
