@@ -36,6 +36,7 @@ function Footer() {
           >
             Terms & Conditions
           </button>
+          <span className="footer-contact">Contact: <a href="mailto:shoreyjeet@gmail.com">shoreyjeet@gmail.com</a>, <a href="tel:9967606080">9967606080</a></span>
           <p>© 2025 Poonam Sagarcha Raja. All rights reserved.</p>
         </div>
       </div>
