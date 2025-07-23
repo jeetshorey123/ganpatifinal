@@ -79,6 +79,9 @@ class ReceiptPDFGenerator {
     receiptDiv.innerHTML = `
       <div style="text-align: center; margin-bottom: 30px;">
         <img src='https://upload.wikimedia.org/wikipedia/commons/7/7e/Ganesh_icon.png' alt='Ganpati Logo' style='height: 60px; margin-bottom: 10px;' />
+        <div style="font-size: 28px; font-weight: bold; color: #FFD700; margin-bottom: 6px; letter-spacing: 1.5px; text-shadow: 0 0 10px #FFD700;">
+          Sankalp Utsav Samiti
+        </div>
         <div style="font-size: 32px; font-weight: bold; color: #00fff7; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 0 12px #00fff7;">
           GANPATI DONATION RECEIPT
         </div>
