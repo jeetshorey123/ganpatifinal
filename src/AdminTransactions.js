@@ -419,7 +419,7 @@ function AdminTransactions() {
         </div>
 
         {/* Transactions Table */}
-        <div className="transactions-table-container glass-card">
+        <div className="transactions-table-container glass-card" style={{ marginLeft: 0, marginRight: 'auto', width: '100%', maxWidth: '100vw', overflowX: 'auto' }}>
           {loading ? (
             <div className="loading-container">
               <div className="loading-spinner"></div>
@@ -432,6 +432,7 @@ function AdminTransactions() {
                   <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Actions</th>
                     <th>Phone</th>
                     <th>Address</th>
                     <th>Amount Paid</th>
@@ -440,7 +441,6 @@ function AdminTransactions() {
                     <th>Payment Method</th>
                     <th>📬 Receipt Delivery Preference</th>
                     <th>Timestamp</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -453,17 +453,10 @@ function AdminTransactions() {
                       <tr key={transaction.id}>
                         <td>{transaction.id}</td>
                         <td>{transaction.name}</td>
-                        <td>{transaction.phone}</td>
-                        <td>{addressText}</td>
-                        <td>₹{parseFloat(transaction.amount_paid || transaction.amount).toLocaleString()}</td>
-                        <td>₹{parseFloat(transaction.total_amount || transaction.amount).toLocaleString()}</td>
-                        <td>₹{balanceAmount.toLocaleString()}</td>
-                        <td>{transaction.payment_method || 'N/A'}</td>
-                        <td>{transaction.receipt_delivery_preference || 'N/A'}</td>
-                        <td>{new Date(transaction.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
                         <td className="actions-cell" style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
                           <button 
                             className="btn success"
+                            style={{ fontSize: '0.85rem', padding: '0.35rem 0.7rem', minWidth: 'unset', margin: 0 }}
                             onClick={() => handleGenerateReceipt(transaction)}
                             disabled={generatingReceipt}
                             title="Download PDF"
@@ -472,20 +465,22 @@ function AdminTransactions() {
                           </button>
                           <button 
                             className="btn warning"
+                            style={{ fontSize: '0.85rem', padding: '0.35rem 0.7rem', minWidth: 'unset', margin: 0 }}
                             onClick={() => handleSendWhatsApp(transaction)}
                             disabled={sendingWhatsApp}
                             title="Send WhatsApp"
                           >
                             WhatsApp
                           </button>
-                          <button 
-                            className="btn error"
-                            onClick={() => confirmDelete(transaction)}
-                            title="Delete"
-                          >
-                            Delete
-                          </button>
                         </td>
+                        <td>{transaction.phone}</td>
+                        <td>{addressText}</td>
+                        <td>₹{parseFloat(transaction.amount_paid || transaction.amount).toLocaleString()}</td>
+                        <td>₹{parseFloat(transaction.total_amount || transaction.amount).toLocaleString()}</td>
+                        <td>₹{balanceAmount.toLocaleString()}</td>
+                        <td>{transaction.payment_method || 'N/A'}</td>
+                        <td>{transaction.receipt_delivery_preference || 'N/A'}</td>
+                        <td>{new Date(transaction.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
                       </tr>
                     );
                   })}
