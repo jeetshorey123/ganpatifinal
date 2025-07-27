@@ -43,9 +43,12 @@ function AdminTransactions() {
         // Calculate stats
         const stats = result.data.reduce((acc, curr) => {
           acc.totalTransactions++;
-          acc.totalAmount += parseFloat(curr.amount || 0);
-          if (curr.paymentStatus === 'success') acc.successfulPayments++;
-          if (curr.paymentStatus === 'pending') acc.pendingPayments++;
+          // Use amount_paid if available, else total_amount, else amount
+          const amt = parseFloat(curr.amount_paid || curr.total_amount || curr.amount || 0);
+          acc.totalAmount += isNaN(amt) ? 0 : amt;
+          const status = (curr.payment_status || curr.paymentStatus || '').toLowerCase();
+          if (status === 'success') acc.successfulPayments++;
+          if (status === 'pending') acc.pendingPayments++;
           return acc;
         }, {
           totalTransactions: 0,
@@ -218,10 +221,10 @@ function AdminTransactions() {
   const getFilteredTransactions = () => {
     // Filter transactions as before
     const filtered = transactions.filter(transaction => {
-      const matchesPaymentStatus = filters.paymentStatus === 'all' || 
-        (filters.paymentStatus === 'partial' ? 
-          transaction.payment_status === 'Pending' : 
-          transaction.payment_status === filters.paymentStatus);
+      // Normalize status for comparison
+      const status = (transaction.payment_status || '').toLowerCase();
+      const filterStatus = (filters.paymentStatus || '').toLowerCase();
+      const matchesPaymentStatus = filterStatus === 'all' || status === filterStatus;
 
       // Custom logic for receipt preference
       let matchesReceiptPreference = true;
@@ -553,4 +556,3 @@ function AdminTransactions() {
 }
 
 export default AdminTransactions;
-
