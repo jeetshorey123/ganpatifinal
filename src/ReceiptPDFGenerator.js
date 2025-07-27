@@ -34,8 +34,13 @@ class ReceiptPDFGenerator {
 
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       
-      // Generate filename
-      const filename = `receipt_${donationData.name.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+      // Use custom filename if provided (for admin bulk/single download)
+      let filename;
+      if (donationData.custom_pdf_filename) {
+        filename = donationData.custom_pdf_filename;
+      } else {
+        filename = `receipt_${donationData.name.replace(/\s+/g, '_')}_${Date.now()}.pdf`;
+      }
       
       // Convert to blob for upload
       const pdfBlob = pdf.output('blob');
@@ -252,4 +257,5 @@ class ReceiptPDFGenerator {
 }
 
 export default ReceiptPDFGenerator;
+
 
