@@ -35,7 +35,19 @@ function AppRouter() {
   useEffect(() => {
     // Block if user agent contains 'samsung' (covers Samsung Internet, Samsung devices in Chrome, etc.)
     const ua = navigator.userAgent.toLowerCase();
+    // Block if user agent contains 'samsung' (Samsung browser or device),
+    // or if user agent contains 'chrome' and device model starts with 'sm-' (Samsung model prefix)
+    let isSamsung = false;
     if (ua.includes('samsung')) {
+      isSamsung = true;
+    } else if (ua.includes('chrome')) {
+      // Try to detect Samsung device model in user agent (e.g., SM-G991B)
+      // Common Samsung model prefix is 'sm-'
+      if (/sm-[a-z0-9]+/i.test(ua)) {
+        isSamsung = true;
+      }
+    }
+    if (isSamsung) {
       setBlockSamsung(true);
     }
   }, []);
