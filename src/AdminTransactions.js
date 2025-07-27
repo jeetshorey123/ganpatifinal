@@ -197,6 +197,13 @@ function AdminTransactions() {
   const handleSendWhatsApp = async (transaction) => {
     try {
       setSendingWhatsApp(true);
+      // 1. Download the PDF receipt
+      const pdfGenerator = new ReceiptPDFGenerator();
+      const result = await pdfGenerator.downloadReceiptPDF(transaction);
+      if (!result.success) {
+        throw new Error('Failed to generate receipt locally.');
+      }
+      // 2. Open WhatsApp as before
       const message = encodeURIComponent(generateReceiptMessage(transaction));
       const phoneNumber = transaction.phone.replace(/[^0-9]/g, '');
       const formattedPhone = phoneNumber.startsWith('91') ? phoneNumber : `91${phoneNumber}`;
@@ -209,10 +216,10 @@ function AdminTransactions() {
       } else {
         window.open(whatsappUrl, '_blank');
       }
-      showNotification('success', 'WhatsApp message opened! Click send in WhatsApp to deliver the receipt.');
+      showNotification('success', 'PDF downloaded and WhatsApp message opened! Click send in WhatsApp to deliver the receipt.');
     } catch (error) {
-      console.error('Error sending WhatsApp message:', error);
-      showNotification('error', 'Error opening WhatsApp. Please try again.');
+      console.error('Error sending WhatsApp message or downloading PDF:', error);
+      showNotification('error', 'Error downloading PDF or opening WhatsApp. Please try again.');
     } finally {
       setSendingWhatsApp(false);
     }
@@ -556,4 +563,5 @@ function AdminTransactions() {
 }
 
 export default AdminTransactions;
+
 
