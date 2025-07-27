@@ -33,7 +33,9 @@ function AppRouter() {
 
   // Block Samsung devices (must not call hooks conditionally)
   useEffect(() => {
-    if (/samsung/i.test(navigator.userAgent)) {
+    // Block if user agent contains 'samsung' (covers Samsung Internet, Samsung devices in Chrome, etc.)
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes('samsung')) {
       setBlockSamsung(true);
     }
   }, []);
