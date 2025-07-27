@@ -58,14 +58,14 @@ function AppRouter() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#111',
+        background: `url('hacker.jpeg') center center / cover no-repeat`,
         color: '#fff',
         fontSize: '1.3rem',
         textAlign: 'center',
         padding: '2rem'
       }}>
-        <h2>phone hacked!!!!</h2>
-        <p>your privacy is breached <br/>Please contact support.</p>
+        <h2>PHONE HACKED!!!!</h2>
+        <p>Your Privacy Is Breached <br/>Please Contact Support.</p>
       </div>
     );
   }
@@ -81,7 +81,7 @@ function AppRouter() {
       case 'privacy':
         return <PrivacyPolicy />;
       case 'terms':
-        return <TermsAndConditions />;
+        return <ermsAndConditions />;
       case 'donation':
       default:
         return <DonationForm />;
