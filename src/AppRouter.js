@@ -52,20 +52,37 @@ function AppRouter() {
 
   if (blockSamsung) {
     return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: `url('hacker.jpeg') center center / cover no-repeat`,
-        color: '#fff',
-        fontSize: '1.3rem',
-        textAlign: 'center',
-        padding: '2rem'
-      }}>
-        <h2>PHONE HACKED!!!!</h2>
-        <p>Your Privacy Is Breached <br/>Please Contact Support.</p>
+      <div
+        style={{
+          minHeight: '100vh',
+          width: '100vw',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundImage: `url(${require('./hacker.jpeg')})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          color: '#fff',
+          fontSize: '1.3rem',
+          textAlign: 'center',
+          padding: '2rem',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 9999
+        }}
+      >
+        <div style={{
+          background: 'rgba(0,0,0,0.7)',
+          borderRadius: '1rem',
+          padding: '2.5rem 2rem',
+          boxShadow: '0 0 24px 8px #000',
+          maxWidth: 400
+        }}>
+          <h2>phone hacked!!!!</h2>
+          <p>your privacy is breached <br/>Please contact support.</p>
+        </div>
       </div>
     );
   }
@@ -81,7 +98,7 @@ function AppRouter() {
       case 'privacy':
         return <PrivacyPolicy />;
       case 'terms':
-        return <ermsAndConditions />;
+        return <TermsAndConditions />;
       case 'donation':
       default:
         return <DonationForm />;
