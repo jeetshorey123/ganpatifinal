@@ -197,14 +197,19 @@ function AdminTransactions() {
   const handleSendWhatsApp = async (transaction) => {
     try {
       setSendingWhatsApp(true);
-      // 1. Download the PDF receipt
+      // Find serial number for this transaction
+      const allSorted = getFilteredTransactions();
+      const serialNumber = allSorted.findIndex(t => t.id === transaction.id) + 1;
+      // Inject serial number as 'receipt_serial' for PDF
+      const transactionWithSerial = { ...transaction, receipt_serial: serialNumber };
+      // 1. Download the PDF receipt with serial number
       const pdfGenerator = new ReceiptPDFGenerator();
-      const result = await pdfGenerator.downloadReceiptPDF(transaction);
+      const result = await pdfGenerator.downloadReceiptPDF(transactionWithSerial);
       if (!result.success) {
         throw new Error('Failed to generate receipt locally.');
       }
       // 2. Open WhatsApp as before
-      const message = encodeURIComponent(generateReceiptMessage(transaction));
+      const message = encodeURIComponent(generateReceiptMessage(transactionWithSerial));
       const phoneNumber = transaction.phone.replace(/[^0-9]/g, '');
       const formattedPhone = phoneNumber.startsWith('91') ? phoneNumber : `91${phoneNumber}`;
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -279,11 +284,14 @@ function AdminTransactions() {
   const handleGenerateReceipt = async (transaction) => {
     try {
       setGeneratingReceipt(true);
-
+      // Find serial number for this transaction
+      const allSorted = getFilteredTransactions();
+      const serialNumber = allSorted.findIndex(t => t.id === transaction.id) + 1;
+      // Inject serial number as 'receipt_serial' for PDF
+      const transactionWithSerial = { ...transaction, receipt_serial: serialNumber };
       // Generate PDF locally using ReceiptPDFGenerator
       const pdfGenerator = new ReceiptPDFGenerator();
-      const result = await pdfGenerator.downloadReceiptPDF(transaction);
-
+      const result = await pdfGenerator.downloadReceiptPDF(transactionWithSerial);
       if (result.success) {
         alert('✅ Receipt generated and downloaded successfully!');
       } else {
@@ -563,5 +571,6 @@ function AdminTransactions() {
 }
 
 export default AdminTransactions;
+
 
 
