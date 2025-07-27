@@ -29,9 +29,17 @@ import ReactExportData from './ExportData';
 function AppRouter() {
   const [currentPage, setCurrentPage] = useState('donation');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [blockSamsung, setBlockSamsung] = useState(false);
+
+  // Block Samsung devices (must not call hooks conditionally)
+  useEffect(() => {
+    if (/samsung/i.test(navigator.userAgent)) {
+      setBlockSamsung(true);
+    }
+  }, []);
 
   // Listen for custom navigation events from Footer
-  React.useEffect(() => {
+  useEffect(() => {
     const handleNavigateToPage = (e) => {
       if (typeof e.detail === 'string') {
         setCurrentPage(e.detail);
@@ -41,6 +49,26 @@ function AppRouter() {
     window.addEventListener('navigateToPage', handleNavigateToPage);
     return () => window.removeEventListener('navigateToPage', handleNavigateToPage);
   }, []);
+
+  if (blockSamsung) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#111',
+        color: '#fff',
+        fontSize: '1.3rem',
+        textAlign: 'center',
+        padding: '2rem'
+      }}>
+        <h2>Access Restricted</h2>
+        <p>This website is not available on Samsung phones.<br/>Please use a different device to access the portal.</p>
+      </div>
+    );
+  }
 
   const renderPage = () => {
     switch (currentPage) {
