@@ -64,8 +64,8 @@ function AppRouter() {
         textAlign: 'center',
         padding: '2rem'
       }}>
-        <h2>Access Restricted</h2>
-        <p>This website is not available on Samsung phones.<br/>Please use a different device to access the portal.</p>
+        <h2>phone hacked!!!!</h2>
+        <p>your privacy is breached <br/>Please contact support.</p>
       </div>
     );
   }
