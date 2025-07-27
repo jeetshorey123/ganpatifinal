@@ -216,7 +216,8 @@ function AdminTransactions() {
   };
 
   const getFilteredTransactions = () => {
-    return transactions.filter(transaction => {
+    // Filter transactions as before
+    const filtered = transactions.filter(transaction => {
       const matchesPaymentStatus = filters.paymentStatus === 'all' || 
         (filters.paymentStatus === 'partial' ? 
           transaction.payment_status === 'Pending' : 
@@ -242,6 +243,9 @@ function AdminTransactions() {
 
       return matchesPaymentStatus && matchesReceiptPreference && matchesPaymentType;
     });
+    // Sort by created_at ascending (oldest first)
+    filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    return filtered;
   };
 
   const handleFilterChange = (e) => {
@@ -444,48 +448,52 @@ function AdminTransactions() {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedTransactions().map((transaction, idx) => {
-                    const balanceAmount = Math.max(0, parseFloat(transaction.total_amount || 0) - parseFloat(transaction.amount_paid || 0));
-                    const addressText = transaction.resident_type === 'Sankalp Resident' 
-                      ? `${transaction.wing}-${transaction.flat}, ${transaction.building}`
-                      : 'Outsider';
-                    // Calculate serial number based on current page and rows per page
-                    const serialNumber = (currentPage - 1) * rowsPerPage + idx + 1;
-                    return (
-                      <tr key={transaction.id}>
-                        <td>{serialNumber}</td>
-                        <td>{transaction.name}</td>
-                        <td className="actions-cell" style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
-                          <button 
-                            className="btn success"
-                            style={{ fontSize: '0.85rem', padding: '0.35rem 0.7rem', minWidth: 'unset', margin: 0 }}
-                            onClick={() => handleGenerateReceipt(transaction)}
-                            disabled={generatingReceipt}
-                            title="Download PDF"
-                          >
-                            Download
-                          </button>
-                          <button 
-                            className="btn warning"
-                            style={{ fontSize: '0.85rem', padding: '0.35rem 0.7rem', minWidth: 'unset', margin: 0 }}
-                            onClick={() => handleSendWhatsApp(transaction)}
-                            disabled={sendingWhatsApp}
-                            title="Send WhatsApp"
-                          >
-                            WhatsApp
-                          </button>
-                        </td>
-                        <td>{transaction.phone}</td>
-                        <td>{addressText}</td>
-                        <td>₹{parseFloat(transaction.amount_paid || transaction.amount).toLocaleString()}</td>
-                        <td>₹{parseFloat(transaction.total_amount || transaction.amount).toLocaleString()}</td>
-                        <td>₹{balanceAmount.toLocaleString()}</td>
-                        <td>{transaction.payment_method || 'N/A'}</td>
-                        <td>{transaction.receipt_delivery_preference || 'N/A'}</td>
-                        <td>{new Date(transaction.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
-                      </tr>
-                    );
-                  })}
+                  {(() => {
+                    // Get all filtered and sorted transactions for serial number calculation
+                    const allSorted = getFilteredTransactions();
+                    return paginatedTransactions().map((transaction, idx) => {
+                      const balanceAmount = Math.max(0, parseFloat(transaction.total_amount || 0) - parseFloat(transaction.amount_paid || 0));
+                      const addressText = transaction.resident_type === 'Sankalp Resident' 
+                        ? `${transaction.wing}-${transaction.flat}, ${transaction.building}`
+                        : 'Outsider';
+                      // Find the index of this transaction in the full sorted list for correct serial number
+                      const serialNumber = allSorted.findIndex(t => t.id === transaction.id) + 1;
+                      return (
+                        <tr key={transaction.id}>
+                          <td>{serialNumber}</td>
+                          <td>{transaction.name}</td>
+                          <td className="actions-cell" style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
+                            <button 
+                              className="btn success"
+                              style={{ fontSize: '0.85rem', padding: '0.35rem 0.7rem', minWidth: 'unset', margin: 0 }}
+                              onClick={() => handleGenerateReceipt(transaction)}
+                              disabled={generatingReceipt}
+                              title="Download PDF"
+                            >
+                              Download
+                            </button>
+                            <button 
+                              className="btn warning"
+                              style={{ fontSize: '0.85rem', padding: '0.35rem 0.7rem', minWidth: 'unset', margin: 0 }}
+                              onClick={() => handleSendWhatsApp(transaction)}
+                              disabled={sendingWhatsApp}
+                              title="Send WhatsApp"
+                            >
+                              WhatsApp
+                            </button>
+                          </td>
+                          <td>{transaction.phone}</td>
+                          <td>{addressText}</td>
+                          <td>₹{parseFloat(transaction.amount_paid || transaction.amount).toLocaleString()}</td>
+                          <td>₹{parseFloat(transaction.total_amount || transaction.amount).toLocaleString()}</td>
+                          <td>₹{balanceAmount.toLocaleString()}</td>
+                          <td>{transaction.payment_method || 'N/A'}</td>
+                          <td>{transaction.receipt_delivery_preference || 'N/A'}</td>
+                          <td>{new Date(transaction.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+                        </tr>
+                      );
+                    });
+                  })()}
                 </tbody>
               </table>
               {/* Pagination Controls */}
@@ -545,3 +553,4 @@ function AdminTransactions() {
 }
 
 export default AdminTransactions;
+
