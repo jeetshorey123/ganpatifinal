@@ -86,7 +86,7 @@ class ReceiptPDFGenerator {
           GANPATI DONATION RECEIPT
         </div>
         <div style="font-size: 22px; font-weight: bold; color: #fff; margin-bottom: 20px; text-shadow: 0 0 8px #00fff7;">
-          <span style="color:#00fff7">#${data.id || 'N/A'}</span>
+          <span style="color:#00fff7">#${data.receipt_serial || data.id || 'N/A'}</span>
         </div>
         <div style="width: 100%; height: 4px; background: linear-gradient(90deg,#00fff7 0%,#00ffa3 100%); margin: 24px 0; border-radius: 2px;"></div>
       </div>
@@ -118,7 +118,7 @@ class ReceiptPDFGenerator {
           📅 Transaction Information
         </div>
         <div style="margin-bottom: 10px; font-size: 16px;"><strong>Date & Time:</strong> ${currentDate}</div>
-        <div style="margin-bottom: 10px; font-size: 16px;"><strong>Receipt ID:</strong> ${data.id || 'N/A'}</div>
+        <div style="margin-bottom: 10px; font-size: 16px;"><strong>Receipt ID:</strong> ${data.receipt_serial || data.id || 'N/A'}</div>
         ${data.payment_id ? `<div style="margin-bottom: 10px; font-size: 16px;"><strong>Payment ID:</strong> ${data.payment_id}</div>` : ''}
       </div>
 
@@ -252,3 +252,4 @@ class ReceiptPDFGenerator {
 }
 
 export default ReceiptPDFGenerator;
+
