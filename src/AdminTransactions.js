@@ -4,6 +4,47 @@ import './AdminTransactions.css';
 import ReceiptPDFGenerator from './ReceiptPDFGenerator';
 
 function AdminTransactions() {
+  // Download all PDFs for filtered transactions
+  const handleDownloadAllPDFs = async () => {
+    const allSorted = getFilteredTransactions();
+    const pdfGenerator = new ReceiptPDFGenerator();
+    for (let idx = 0; idx < allSorted.length; idx++) {
+      const t = allSorted[idx];
+      const serial = idx + 1;
+      const name = t.name.replace(/\s+/g, '_').replace(/,/g, '');
+      const customFilename = `receipt_${name}_${serial}.pdf`;
+      const transactionWithSerial = { ...t, receipt_serial: serial, custom_pdf_filename: customFilename };
+      await pdfGenerator.downloadReceiptPDF(transactionWithSerial);
+      await new Promise(res => setTimeout(res, 800));
+    }
+    showNotification('success', 'All PDFs downloaded!');
+  };
+  // Download CSV for Selenium automation
+  const handleDownloadSendAllCSV = () => {
+    const allSorted = getFilteredTransactions();
+    const csvRows = [
+      'Serial,Name,Phone,ReceiptFileName',
+      ...allSorted.map((t, idx) => {
+        const serial = idx + 1;
+        const name = t.name.replace(/,/g, '');
+        const phone = t.phone.replace(/[^0-9]/g, '');
+        // The expected filename pattern for the PDF
+        const fileName = `receipt_${name.replace(/\s+/g, '_')}_${serial}.pdf`;
+        return `${serial},${name},${phone},${fileName}`;
+      })
+    ];
+    const csvContent = csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'send_all_whatsapp.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showNotification('success', 'CSV for Selenium automation downloaded!');
+  };
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage] = useState(10); // Show 10 transactions per page
@@ -287,8 +328,10 @@ function AdminTransactions() {
       // Find serial number for this transaction
       const allSorted = getFilteredTransactions();
       const serialNumber = allSorted.findIndex(t => t.id === transaction.id) + 1;
-      // Inject serial number as 'receipt_serial' for PDF
-      const transactionWithSerial = { ...transaction, receipt_serial: serialNumber };
+      const name = transaction.name.replace(/\s+/g, '_').replace(/,/g, '');
+      const customFilename = `receipt_${name}_${serialNumber}.pdf`;
+      // Inject serial number and custom filename for PDF
+      const transactionWithSerial = { ...transaction, receipt_serial: serialNumber, custom_pdf_filename: customFilename };
       // Generate PDF locally using ReceiptPDFGenerator
       const pdfGenerator = new ReceiptPDFGenerator();
       const result = await pdfGenerator.downloadReceiptPDF(transactionWithSerial);
@@ -362,6 +405,21 @@ function AdminTransactions() {
 
   return (
     <div className="admin-transactions-container">
+      {/* Download All PDFs Button */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16, gap: 12 }}>
+        <button className="btn primary" onClick={handleDownloadSendAllCSV} title="Download CSV for Selenium WhatsApp Automation">
+          Send All (Selenium)
+        </button>
+        <button className="btn success" onClick={handleDownloadAllPDFs} title="Download all receipt PDFs for filtered transactions">
+          Download All PDFs
+        </button>
+      </div>
+      {/* Send All Button for Selenium Automation */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
+        <button className="btn primary" onClick={handleDownloadSendAllCSV} title="Download CSV for Selenium WhatsApp Automation">
+          Send All (Selenium)
+        </button>
+      </div>
       <div className="admin-dashboard">
         {/* Stats Cards */}
         <div className="stats-container">
@@ -571,6 +629,7 @@ function AdminTransactions() {
 }
 
 export default AdminTransactions;
+
 
 
 
