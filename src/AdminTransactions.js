@@ -444,14 +444,16 @@ function AdminTransactions() {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedTransactions().map(transaction => {
+                  {paginatedTransactions().map((transaction, idx) => {
                     const balanceAmount = Math.max(0, parseFloat(transaction.total_amount || 0) - parseFloat(transaction.amount_paid || 0));
                     const addressText = transaction.resident_type === 'Sankalp Resident' 
                       ? `${transaction.wing}-${transaction.flat}, ${transaction.building}`
                       : 'Outsider';
+                    // Calculate serial number based on current page and rows per page
+                    const serialNumber = (currentPage - 1) * rowsPerPage + idx + 1;
                     return (
                       <tr key={transaction.id}>
-                        <td>{transaction.id}</td>
+                        <td>{serialNumber}</td>
                         <td>{transaction.name}</td>
                         <td className="actions-cell" style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', alignItems: 'center' }}>
                           <button 
